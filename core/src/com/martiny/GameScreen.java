@@ -3,8 +3,8 @@ package com.martiny;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
     public static  final float SPEED = 140;
@@ -12,8 +12,8 @@ public class GameScreen implements Screen {
     Texture img2;
     float x, y;
 
-    HelloWorld game;
-    public GameScreen(HelloWorld game){
+    HelloGame game;
+    public GameScreen(HelloGame game){
         this.game = game;
     }
 
@@ -38,7 +38,8 @@ public class GameScreen implements Screen {
             x -= SPEED * Gdx.graphics.getDeltaTime();
         }
 
-        ScreenUtils.clear(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.begin();
         game.batch.draw(img, 300,200);
