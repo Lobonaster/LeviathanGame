@@ -1,11 +1,12 @@
 package com.martiny;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class HelloGame extends Game {
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 600;
+	public static final int WIDTH = 1200;
+	public static final int HEIGHT = 800;
 	public SpriteBatch batch;
 	@Override
 	public void create () {
