@@ -1,10 +1,9 @@
-package com.martiny;
+package com.lebedev;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class HelloGame extends Game {
+public class LeviathanGame extends Game {
 	public static final int WIDTH = 1200;
 	public static final int HEIGHT = 800;
 	public SpriteBatch batch;

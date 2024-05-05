@@ -1,4 +1,4 @@
-package com.martiny;
+package com.lebedev;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -7,16 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 
 
 public class MainMenuScreen implements Screen {
-    private static final int EXIT_W = 100;
+    private static final int EXIT_W = 700;
     private static final int EXIT_H = 100;
-    private static final int EXIT_Y = HelloGame.HEIGHT / 2 - 420 / 2 ;
-    private static final int PLAY_W = 100;
+    private static final int EXIT_Y = LeviathanGame.HEIGHT / 2 - 620 / 2 ;
+    private static final int PLAY_W = 700;
     private static final int PLAY_H = 100;
-    private static final int PLAY_Y = HelloGame.HEIGHT / 2 - 80 / 2;
-    private static final int SETTINGS_W = 100;
+    private static final int PLAY_Y = LeviathanGame.HEIGHT / 2 - 240 / 2;
+    private static final int SETTINGS_W = 700;
     private static final int SETTINGS_H = 100;
-    private static final int SETTINGS_Y = HelloGame.HEIGHT / 2 - 250 / 2;
-    HelloGame game;
+    private static final int SETTINGS_Y = LeviathanGame.HEIGHT / 2 - 430 / 2;
+    LeviathanGame game;
     Texture menu_bg;
     Texture exit_button;
     Texture exit_button_hover;
@@ -25,7 +25,7 @@ public class MainMenuScreen implements Screen {
 
     Texture settings_button;
     Texture settings_button_hover;
-    public MainMenuScreen (HelloGame game) {
+    public MainMenuScreen (LeviathanGame game) {
         this.game = game;
         menu_bg = new Texture("assets/Pictures/Menus/menu.png");
         next_button_hover = new Texture("assets/Pictures/Buttons/next_hover.png");
@@ -48,14 +48,14 @@ public class MainMenuScreen implements Screen {
 
         game.batch.begin();
 
-        game.batch.draw(menu_bg,0,0,HelloGame.WIDTH,HelloGame.HEIGHT);
+        game.batch.draw(menu_bg,0,0, LeviathanGame.WIDTH, LeviathanGame.HEIGHT);
 
-        int x = HelloGame.WIDTH / 2 - PLAY_W / 2 ;
+        int x = LeviathanGame.WIDTH / 4 - PLAY_W / 2 ;
 
         if (Gdx.input.getX() < x + PLAY_W
                 && Gdx.input.getX() > x
-                && HelloGame.HEIGHT - Gdx.input.getY() < PLAY_Y + PLAY_H
-                && HelloGame.HEIGHT - Gdx.input.getY() > PLAY_Y)
+                && LeviathanGame.HEIGHT - Gdx.input.getY() < PLAY_Y + PLAY_H
+                && LeviathanGame.HEIGHT - Gdx.input.getY() > PLAY_Y)
         {
             game.batch.draw(next_button_hover,x,PLAY_Y,PLAY_W, PLAY_H);
             if (Gdx.input.isTouched()){
@@ -68,12 +68,12 @@ public class MainMenuScreen implements Screen {
             game.batch.draw(next_button,x,PLAY_Y,PLAY_W, PLAY_H);
         }
 
-        x = HelloGame.WIDTH / 2 - SETTINGS_W / 2 ;
+        x = LeviathanGame.WIDTH / 4 - SETTINGS_W / 2 ;
 
         if (Gdx.input.getX() < x + SETTINGS_W
                 && Gdx.input.getX() > x
-                && HelloGame.HEIGHT - Gdx.input.getY() < SETTINGS_Y + SETTINGS_H
-                && HelloGame.HEIGHT - Gdx.input.getY() > SETTINGS_Y)
+                && LeviathanGame.HEIGHT - Gdx.input.getY() < SETTINGS_Y + SETTINGS_H
+                && LeviathanGame.HEIGHT - Gdx.input.getY() > SETTINGS_Y)
         {
             game.batch.draw(settings_button_hover,x,SETTINGS_Y,SETTINGS_W, SETTINGS_H);
             if (Gdx.input.isTouched()){
@@ -86,12 +86,12 @@ public class MainMenuScreen implements Screen {
             game.batch.draw(settings_button,x,SETTINGS_Y,SETTINGS_W, SETTINGS_H);
         }
 
-        x = HelloGame.WIDTH / 2 - EXIT_W / 2;
+        x = LeviathanGame.WIDTH / 4 - EXIT_W / 2;
 
         if (Gdx.input.getX() < x + EXIT_W
                 && Gdx.input.getX() > x
-                && HelloGame.HEIGHT - Gdx.input.getY() < EXIT_Y + EXIT_H
-                && HelloGame.HEIGHT - Gdx.input.getY() > EXIT_Y)
+                && LeviathanGame.HEIGHT - Gdx.input.getY() < EXIT_Y + EXIT_H
+                && LeviathanGame.HEIGHT - Gdx.input.getY() > EXIT_Y)
         {
             game.batch.draw(exit_button_hover,x,EXIT_Y,EXIT_W, EXIT_H);
             if(Gdx.input.isTouched()){
