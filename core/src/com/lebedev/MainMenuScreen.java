@@ -20,17 +20,17 @@ public class MainMenuScreen implements Screen {
     Texture menu_bg;
     Texture exit_button;
     Texture exit_button_hover;
-    Texture next_button;
-    Texture next_button_hover;
+    Texture play_button;
+    Texture play_button_hover;
 
     Texture settings_button;
     Texture settings_button_hover;
     public MainMenuScreen (LeviathanGame game) {
         this.game = game;
         menu_bg = new Texture("assets/Pictures/Menus/menu.png");
-        next_button_hover = new Texture("assets/Pictures/Buttons/next_hover.png");
+        play_button_hover = new Texture("assets/Pictures/Buttons/play_hover.png");
         exit_button_hover = new Texture("assets/Pictures/Buttons/exit_hover.png");
-        next_button = new Texture("assets/Pictures/Buttons/next.png");
+        play_button = new Texture("assets/Pictures/Buttons/play.png");
         exit_button = new Texture("assets/Pictures/Buttons/exit.png");
         settings_button = new Texture("assets/Pictures/Buttons/settings.png");
         settings_button_hover = new Texture("assets/Pictures/Buttons/settings_hover.png");
@@ -57,7 +57,7 @@ public class MainMenuScreen implements Screen {
                 && LeviathanGame.HEIGHT - Gdx.input.getY() < PLAY_Y + PLAY_H
                 && LeviathanGame.HEIGHT - Gdx.input.getY() > PLAY_Y)
         {
-            game.batch.draw(next_button_hover,x,PLAY_Y,PLAY_W, PLAY_H);
+            game.batch.draw(play_button_hover,x,PLAY_Y,PLAY_W, PLAY_H);
             if (Gdx.input.isTouched()){
                 this.dispose();
                 game.setScreen(new GameScreen(game));
@@ -65,7 +65,7 @@ public class MainMenuScreen implements Screen {
         }
         else
         {
-            game.batch.draw(next_button,x,PLAY_Y,PLAY_W, PLAY_H);
+            game.batch.draw(play_button,x,PLAY_Y,PLAY_W, PLAY_H);
         }
 
         x = LeviathanGame.WIDTH / 4 - SETTINGS_W / 2 ;
@@ -78,7 +78,7 @@ public class MainMenuScreen implements Screen {
             game.batch.draw(settings_button_hover,x,SETTINGS_Y,SETTINGS_W, SETTINGS_H);
             if (Gdx.input.isTouched()){
                 this.dispose();
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new Settings_Screen(game));
             }
         }
         else
