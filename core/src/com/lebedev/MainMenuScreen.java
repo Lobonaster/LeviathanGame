@@ -34,7 +34,7 @@ public class MainMenuScreen implements Screen {
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
-        skin = new Skin(Gdx.files.internal("assets/skin/skin.json"));
+        skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json")); //TODO: Temporary change to basic uiskin
 
         Table menuButtons = new Table();
         root.add(menuButtons).expandY().expandX().left();
@@ -61,28 +61,25 @@ public class MainMenuScreen implements Screen {
         text_button1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("CLICKED 1");
+                System.out.println("MMS CLICKED 1");
             }
         });
         text_button2.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                LeviathanGame.ScreenState = 1;
-                System.out.println("CLICKED 2");
+                System.out.println("MMS CLICKED 2");
+                game.setScreen(new Settings_Screen(game));
             }
         });
         text_button3.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("CLICKED 3 AND EXIT");
+                System.out.println("MMS CLICKED 3 AND EXIT");
                 Gdx.app.exit();
             }
         });
 
-
-        text_button1.debug();
-        text_button2.debug();
-        text_button3.debug();
+        stage.setDebugAll(true);
     }
 
     @Override
