@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import static com.lebedev.VergVisuals.*;
 
 public class GameScreen implements Screen {
+    // TODO: 12.05.2024 needs a full remake
     public static final float SPEED = 440;
     public static final float ROLL_SWITCH_TIME = 0.15f;
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class VergVisuals {
+    // TODO: 12.05.2024 needs a full remake
     public static final int VERG_WIDTH_PIXEL = 17;
     public static final int VERG_HEIGHT_PIXEL = 32;
     public static final int VERG_WIDTH = VERG_WIDTH_PIXEL * 7;

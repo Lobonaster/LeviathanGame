@@ -1,39 +1,88 @@
 package com.lebedev;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 public class MainMenuScreen implements Screen {
-    private static final int EXIT_W = 700;
-    private static final int EXIT_H = 100;
-    private static final int EXIT_Y = LeviathanGame.HEIGHT / 2 - 620 / 2 ;
-    private static final int PLAY_W = 700;
-    private static final int PLAY_H = 100;
-    private static final int PLAY_Y = LeviathanGame.HEIGHT / 2 - 240 / 2;
-    private static final int SETTINGS_W = 700;
-    private static final int SETTINGS_H = 100;
-    private static final int SETTINGS_Y = LeviathanGame.HEIGHT / 2 - 430 / 2;
     LeviathanGame game;
-    Texture menu_bg;
-    Texture exit_button;
-    Texture exit_button_hover;
-    Texture play_button;
-    Texture play_button_hover;
+    private Stage stage;
+    private Skin skin;
+    private Texture menuBG;
+    private ExtendViewport extendViewport;
 
-    Texture settings_button;
-    Texture settings_button_hover;
-    public MainMenuScreen (LeviathanGame game) {
+    public MainMenuScreen(LeviathanGame game){
         this.game = game;
-        menu_bg = new Texture("assets/Pictures/Menus/menu.png");
-        play_button_hover = new Texture("assets/Pictures/Buttons/play_hover.png");
-        exit_button_hover = new Texture("assets/Pictures/Buttons/exit_hover.png");
-        play_button = new Texture("assets/Pictures/Buttons/play.png");
-        exit_button = new Texture("assets/Pictures/Buttons/exit.png");
-        settings_button = new Texture("assets/Pictures/Buttons/settings.png");
-        settings_button_hover = new Texture("assets/Pictures/Buttons/settings_hover.png");
+        extendViewport = new ExtendViewport(1280, 720);
+
+        game.batch = new SpriteBatch();
+        menuBG = new Texture("assets/Pictures/Menus/MainMenu.png");
+
+        stage = new Stage(new ExtendViewport(1280, 720));
+        Gdx.input.setInputProcessor(stage);
+
+        Table root = new Table();
+        root.setFillParent(true);
+        stage.addActor(root);
+        skin = new Skin(Gdx.files.internal("assets/skin/skin.json"));
+
+        Table menuButtons = new Table();
+        root.add(menuButtons).expandY().expandX().left();
+
+        menuButtons.defaults().padLeft(80).spaceTop(20).width(500).height(100);
+        TextButton text_button1 = new TextButton("PLAY",skin);
+        menuButtons.add(text_button1).padTop(222);
+        text_button1.getLabel().setAlignment(Align.left);
+        text_button1.getLabelCell().padLeft(40);
+
+        menuButtons.row();
+        TextButton text_button2 = new TextButton("SETTINGS",skin);
+        menuButtons.add(text_button2);
+        text_button2.getLabel().setAlignment(Align.left);
+        text_button2.getLabelCell().padLeft(40);
+
+        menuButtons.row();
+        TextButton text_button3 = new TextButton("EXIT",skin);
+        menuButtons.add(text_button3);
+        text_button3.getLabel().setAlignment(Align.left);
+        text_button3.getLabelCell().padLeft(40);
+
+
+        text_button1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("CLICKED 1");
+            }
+        });
+        text_button2.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                LeviathanGame.ScreenState = 1;
+                System.out.println("CLICKED 2");
+            }
+        });
+        text_button3.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("CLICKED 3 AND EXIT");
+                Gdx.app.exit();
+            }
+        });
+
+
+        text_button1.debug();
+        text_button2.debug();
+        text_button3.debug();
     }
 
     @Override
@@ -43,74 +92,20 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0,1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        ScreenUtils.clear(new Color(0x0f140bf7));
+        extendViewport.apply();
+        game.batch.setProjectionMatrix(extendViewport.getCamera().combined);
         game.batch.begin();
-
-        game.batch.draw(menu_bg,0,0, LeviathanGame.WIDTH, LeviathanGame.HEIGHT);
-
-        int x = LeviathanGame.WIDTH / 4 - PLAY_W / 2 ;
-
-        if (Gdx.input.getX() < x + PLAY_W
-                && Gdx.input.getX() > x
-                && LeviathanGame.HEIGHT - Gdx.input.getY() < PLAY_Y + PLAY_H
-                && LeviathanGame.HEIGHT - Gdx.input.getY() > PLAY_Y)
-        {
-            game.batch.draw(play_button_hover,x,PLAY_Y,PLAY_W, PLAY_H);
-            if (Gdx.input.isTouched()){
-                this.dispose();
-                game.setScreen(new GameScreen(game));
-            }
-        }
-        else
-        {
-            game.batch.draw(play_button,x,PLAY_Y,PLAY_W, PLAY_H);
-        }
-
-        x = LeviathanGame.WIDTH / 4 - SETTINGS_W / 2 ;
-
-        if (Gdx.input.getX() < x + SETTINGS_W
-                && Gdx.input.getX() > x
-                && LeviathanGame.HEIGHT - Gdx.input.getY() < SETTINGS_Y + SETTINGS_H
-                && LeviathanGame.HEIGHT - Gdx.input.getY() > SETTINGS_Y)
-        {
-            game.batch.draw(settings_button_hover,x,SETTINGS_Y,SETTINGS_W, SETTINGS_H);
-            if (Gdx.input.isTouched()){
-                this.dispose();
-                game.setScreen(new Settings_Screen(game));
-            }
-        }
-        else
-        {
-            game.batch.draw(settings_button,x,SETTINGS_Y,SETTINGS_W, SETTINGS_H);
-        }
-
-        x = LeviathanGame.WIDTH / 4 - EXIT_W / 2;
-
-        if (Gdx.input.getX() < x + EXIT_W
-                && Gdx.input.getX() > x
-                && LeviathanGame.HEIGHT - Gdx.input.getY() < EXIT_Y + EXIT_H
-                && LeviathanGame.HEIGHT - Gdx.input.getY() > EXIT_Y)
-        {
-            game.batch.draw(exit_button_hover,x,EXIT_Y,EXIT_W, EXIT_H);
-            if(Gdx.input.isTouched()){
-                Gdx.app.exit();
-            }
-        }
-        else
-        {
-            game.batch.draw(exit_button,x,EXIT_Y,EXIT_W, EXIT_H);
-        }
-
-
-
+        game.batch.draw(menuBG,-640,-360,1280,720);
         game.batch.end();
+        stage.act();
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, true);
+        extendViewport.update(width,height);
     }
 
     @Override
@@ -130,6 +125,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        game.batch.dispose();
+        stage.dispose();
     }
 }
