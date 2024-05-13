@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class LeviathanGame extends Game {
 	public SpriteBatch batch;
-	public static int ScreenState = 0;
-
 	public static int WIDTH = 1;
 	public static int HEIGHT = 1;
 

@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setWindowedMode(1280, 720);
 		config.setResizable(false);
-		config.setForegroundFPS(120);
+		config.setForegroundFPS(40);
 		config.setTitle("LeviathanGameProject");
 		new Lwjgl3Application(new LeviathanGame(), config);
 	}

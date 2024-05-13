@@ -62,6 +62,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("MMS CLICKED 1");
+                game.setScreen(new GameScreen(game));
             }
         });
         text_button2.addListener(new ChangeListener() {

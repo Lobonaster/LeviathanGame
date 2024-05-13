@@ -18,8 +18,8 @@ public class VergVisuals {
 
     public Animation[] init() {
 
-        verg_y = 200;
-        verg_x = LeviathanGame.WIDTH / 4 - VergVisuals.VERG_WIDTH / 4;
+        verg_y = -200;
+        verg_x = -450;
         rollTimer = 0;
         roll = 2;
 
