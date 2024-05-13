@@ -3,9 +3,20 @@ package com.lebedev;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import static com.lebedev.VergVisuals.*;
 
@@ -13,13 +24,49 @@ public class GameScreen implements Screen {
     // TODO: 12.05.2024 needs a full remake
     public static final float SPEED = 440;
     public static final float ROLL_SWITCH_TIME = 0.15f;
-
-    Texture BG;
     float stateTime;
     LeviathanGame game;
+    private Skin skin;
+    private Texture stageBG;
+    private ExtendViewport extendViewport;
+    private Stage stage;
+
     public GameScreen(LeviathanGame game){
-        BG = new Texture("assets/Pictures/BGS/stage1.png");
         this.game = game;
+
+        extendViewport = new ExtendViewport(1280, 720); // For background
+        game.batch = new SpriteBatch();
+
+        stageBG = new Texture("assets/Pictures/BGS/stage1.png");
+        skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json")); //TODO: Temporary change to basic uiskin
+
+        stage = new Stage(new ExtendViewport(1280, 720)); // For UI
+        Gdx.input.setInputProcessor(stage);
+
+        Table root = new Table();
+        root.setFillParent(true);
+        stage.addActor(root);
+
+        Table menuButtons = new Table();
+
+        root.add(menuButtons).expandY().expandX().right().top();
+
+        menuButtons.defaults().padRight(40).padTop(40).width(100).height(100);
+
+        TextButton return_button = new TextButton("RETURN",skin);
+        menuButtons.add(return_button);
+        //return_button.getLabel().setAlignment(Align.left);
+        //return_button.getLabelCell();
+
+        return_button.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("RETURN");
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
+        stage.setDebugAll(true);
 
         VergVisuals verg = new VergVisuals();
         verg.init();
@@ -32,92 +79,27 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            verg_x += SPEED * Gdx.graphics.getDeltaTime();
-
-            if (verg_x + VERG_WIDTH > Gdx.graphics.getWidth()) {
-                verg_x = Gdx.graphics.getWidth() - VERG_WIDTH;
-            }
-            //update roll if button just clicked
-            if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && !Gdx.input.isKeyPressed(Input.Keys.LEFT) && VergVisuals.roll < 4)
-            {
-                VergVisuals.rollTimer = 0;
-                VergVisuals.roll++;
-            }
-            //update roll
-            VergVisuals.rollTimer += Gdx.graphics.getDeltaTime();
-            if (Math.abs(VergVisuals.rollTimer) > ROLL_SWITCH_TIME){
-                VergVisuals.rollTimer = 0;
-                VergVisuals.roll ++;
-                if (VergVisuals.roll > 4 ){
-                    VergVisuals.roll = 4;
-                }
-            }
-        } else {
-            if (VergVisuals.roll > 2 ){
-                //update roll to go back into mid pos
-                VergVisuals.rollTimer -= Gdx.graphics.getDeltaTime();
-                if (Math.abs(VergVisuals.rollTimer) > ROLL_SWITCH_TIME){
-                    VergVisuals.rollTimer = 0;
-                    VergVisuals.roll --;
-                    if (VergVisuals.roll < 0 ){
-                        VergVisuals.roll = 0;
-                    }
-                }
-            }
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            verg_x -= SPEED * Gdx.graphics.getDeltaTime();
-
-            if (verg_x < 0 ){
-                verg_x = 0;
-            }
-            //update roll if button just clicked
-            if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && !Gdx.input.isKeyPressed(Input.Keys.RIGHT) && VergVisuals.roll <= 0)
-            {
-                VergVisuals.rollTimer = 0;
-                VergVisuals.roll--;
-            }
-            //update roll
-            VergVisuals.rollTimer -= Gdx.graphics.getDeltaTime();
-            if (Math.abs(VergVisuals.rollTimer) > ROLL_SWITCH_TIME){
-                VergVisuals.rollTimer = 0;
-                VergVisuals.roll --;
-                if (VergVisuals.roll < 0 ){
-                    VergVisuals.roll = 0;
-                }
-            }
-        } else {
-            if (VergVisuals.roll < 2 ){
-                //update roll to go back into mid pos
-                VergVisuals.rollTimer += Gdx.graphics.getDeltaTime();
-                if (Math.abs(VergVisuals.rollTimer) > ROLL_SWITCH_TIME){
-                    VergVisuals.rollTimer = 0;
-                    VergVisuals.roll ++;
-                    if (VergVisuals.roll > 4 ){
-                        VergVisuals.roll = 4;
-                    }
-                }
-            }
-        }
-
         stateTime += delta;
 
-        Gdx.gl.glClearColor(0,0,0,1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        ScreenUtils.clear(Color.DARK_GRAY);
+        extendViewport.apply();
+        game.batch.setProjectionMatrix(extendViewport.getCamera().combined);
         game.batch.begin();
 
-        game.batch.draw(BG,0,0, LeviathanGame.WIDTH, LeviathanGame.HEIGHT);
+        game.batch.draw(stageBG,-640,-360,1280,720);
 
         game.batch.draw((TextureRegion) rolls[VergVisuals.roll].getKeyFrame(stateTime, true), verg_x, verg_y, VergVisuals.VERG_WIDTH, VERG_HEIGHT);
 
         game.batch.end();
+
+        stage.act();
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, true);
+        extendViewport.update(width,height);
     }
 
     @Override
@@ -137,6 +119,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        game.batch.dispose();
+        stage.dispose();
     }
 }
