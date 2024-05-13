@@ -55,8 +55,6 @@ public class GameScreen implements Screen {
 
         TextButton return_button = new TextButton("RETURN",skin);
         menuButtons.add(return_button);
-        //return_button.getLabel().setAlignment(Align.left);
-        //return_button.getLabelCell();
 
         return_button.addListener(new ChangeListener() {
             @Override
