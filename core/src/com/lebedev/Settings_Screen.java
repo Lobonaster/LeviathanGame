@@ -40,7 +40,7 @@ public class Settings_Screen implements Screen {
 
         Table menuButtons = new Table();
 
-        final SelectBox selectBox = new SelectBox(skin);
+        SelectBox selectBox = new SelectBox(skin);
 
         selectBox.setAlignment(Align.right);
         selectBox.getList().setAlignment(Align.right);
@@ -78,6 +78,8 @@ public class Settings_Screen implements Screen {
         Label label = new Label("FULLSCREEN",skin);
         toggle_button.add(label).expandX().left().padLeft(40);
 
+        toggle_button.setChecked(LeviathanGame.fullscreen);
+
         menuButtons.row();
 
         TextButton apply_button = new TextButton("APPLY",skin);
@@ -93,18 +95,25 @@ public class Settings_Screen implements Screen {
         return_button.getLabel().setAlignment(Align.left);
         return_button.getLabelCell().padLeft(40);
 
+        if (LeviathanGame.fullscreen){
+            apply_button.setDisabled(true);
+            selectBox.setDisabled(true);
+        }
+
         toggle_button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (toggle_button.isChecked()) {
                     System.out.println("FullScreen");
                     Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                    LeviathanGame.fullscreen = true;
                     // Prohibition to change resolution while fullscreen
                     apply_button.setDisabled(true);
                     selectBox.setDisabled(true);
                 } else {
                     System.out.println("Windowed");
                     Gdx.graphics.setWindowedMode(res_width,res_height);
+                    LeviathanGame.fullscreen = false;
                     // Allowance to change resolution while not fullscreen
                     apply_button.setDisabled(false);
                     selectBox.setDisabled(false);
