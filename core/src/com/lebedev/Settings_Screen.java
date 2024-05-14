@@ -52,7 +52,7 @@ public class Settings_Screen implements Screen {
                 System.out.println(selectBox.getSelected());
             }
         });
-        selectBox.setItems("1280x720", "1920x1080", "2560x1440", "3840x2160");
+        selectBox.setItems("1280x720", "1280x800", "1920x1080","1920x1200", "2560x1440", "2560x1600", "3840x2160");
         selectBox.setSelected("1280x720");
         selectBox.addListener(new ChangeListener() {
             @Override
@@ -70,11 +70,11 @@ public class Settings_Screen implements Screen {
 
         root.add(menuButtons).expandY().expandX().left();
 
-        menuButtons.defaults().padLeft(80).spaceTop(20).width(450).height(100);
+        menuButtons.defaults().padLeft(80).spaceTop(20).width(470).height(100);
 
         menuButtons.row();
         Button toggle_button = new Button(skin,"toggle");
-        menuButtons.add(toggle_button).padTop(222).colspan(2);
+        menuButtons.add(toggle_button).padTop(200).colspan(2);
         Label label = new Label("FULLSCREEN",skin);
         toggle_button.add(label).expandX().left().padLeft(40);
 
@@ -83,11 +83,11 @@ public class Settings_Screen implements Screen {
         menuButtons.row();
 
         TextButton apply_button = new TextButton("APPLY",skin);
-        menuButtons.add(apply_button).width(180);
+        menuButtons.add(apply_button).width(190);
         apply_button.getLabel().setAlignment(Align.left);
         apply_button.getLabelCell().padLeft(40);
 
-        menuButtons.add(selectBox).width(250).height(100).padLeft(20);
+        menuButtons.add(selectBox).width(260).height(100).padLeft(20);
 
         menuButtons.row();
         TextButton return_button = new TextButton("RETURN",skin);
