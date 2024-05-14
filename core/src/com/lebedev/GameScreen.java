@@ -21,15 +21,15 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import static com.lebedev.VergVisuals.*;
 
 public class GameScreen implements Screen {
-    // TODO: 12.05.2024 needs a full remake
-    public static final float SPEED = 440;
-    public static final float ROLL_SWITCH_TIME = 0.15f;
-    float stateTime;
+    // TODO: 14.05.2024 needs many adjustments
+    public static final float SPEED = 440; // TODO: DELETE THIS
+    public static final float ROLL_SWITCH_TIME = 0.15f; // unused for now
     LeviathanGame game;
     private Skin skin;
-    private Texture stageBG;
     private ExtendViewport extendViewport;
     private Stage stage;
+
+    VergVisuals vergActor = new VergVisuals();
 
     public GameScreen(LeviathanGame game){
         this.game = game;
@@ -37,7 +37,6 @@ public class GameScreen implements Screen {
         extendViewport = new ExtendViewport(1280, 720); // For background
         game.batch = new SpriteBatch();
 
-        stageBG = new Texture("assets/Pictures/BGS/stage1.png");
         skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json")); //TODO: Temporary change to basic uiskin
 
         stage = new Stage(new ExtendViewport(1280, 720)); // For UI
@@ -45,29 +44,37 @@ public class GameScreen implements Screen {
 
         Table root = new Table();
         root.setFillParent(true);
+
+        PictureClass bg = new PictureClass();
+        bg.get_assets("BGS/stage1.png",0,0,1280,720);
+        stage.addActor(bg);
+
+        PictureClass ui_bar = new PictureClass();
+        ui_bar.get_assets("Menus/Ui_Bar.png",0,650,1280,70);
+        stage.addActor(ui_bar);
+
+        vergActor.setPos(230,170);
+        stage.addActor(vergActor);
+
         stage.addActor(root);
 
         Table menuButtons = new Table();
-
         root.add(menuButtons).expandY().expandX().right().top();
 
-        menuButtons.defaults().padRight(40).padTop(40).width(100).height(100);
+        menuButtons.defaults().padRight(10).padTop(10).width(50).height(50);
 
-        TextButton return_button = new TextButton("RETURN",skin);
+        TextButton return_button = new TextButton("ESC",skin);
         menuButtons.add(return_button);
 
         return_button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("RETURN");
+                System.out.println("ESC");
                 game.setScreen(new MainMenuScreen(game));
             }
         });
 
         stage.setDebugAll(true);
-
-        VergVisuals verg = new VergVisuals();
-        verg.init();
     }
 
     @Override
@@ -77,18 +84,14 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        stateTime += delta;
 
         ScreenUtils.clear(Color.DARK_GRAY);
-        extendViewport.apply();
-        game.batch.setProjectionMatrix(extendViewport.getCamera().combined);
-        game.batch.begin();
 
-        game.batch.draw(stageBG,-640,-360,1280,720);
+        vergActor.getDelta(delta);
 
-        game.batch.draw((TextureRegion) rolls[VergVisuals.roll].getKeyFrame(stateTime, true), verg_x, verg_y, VergVisuals.VERG_WIDTH, VERG_HEIGHT);
+        //extendViewport.apply();
 
-        game.batch.end();
+        //game.batch.setProjectionMatrix(extendViewport.getCamera().combined);
 
         stage.act();
         stage.draw();

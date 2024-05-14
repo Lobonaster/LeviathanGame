@@ -17,23 +17,22 @@ public class Settings_Screen implements Screen {
     LeviathanGame game;
     private Stage stage;
     private Skin skin;
-    private Texture menuBG;
-    private ExtendViewport extendViewport;
     private int res_width = 1280; // chosen resolution width
     private int res_height = 720; // chosen resolution height
 
     public Settings_Screen(LeviathanGame game){
         this.game = game;
-        extendViewport = new ExtendViewport(res_width, res_height); // For background
-
-        game.batch = new SpriteBatch();
-        menuBG = new Texture("assets/Pictures/Menus/SettingsMenu.png");
 
         stage = new Stage(new ExtendViewport(res_width, res_height)); // For UI
         Gdx.input.setInputProcessor(stage);
 
         Table root = new Table();
         root.setFillParent(true);
+
+        PictureClass settings = new PictureClass();
+        settings.get_assets("Menus/SettingsMenu.png",0,0,1280,720);
+        stage.addActor(settings);
+
         stage.addActor(root);
 
         skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json")); //TODO: Temporary change to basic uiskin
@@ -146,11 +145,7 @@ public class Settings_Screen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(new Color(0x0f140bf7));
-        extendViewport.apply();
-        game.batch.setProjectionMatrix(extendViewport.getCamera().combined);
-        game.batch.begin();
-        game.batch.draw(menuBG,-640,-360,1280,720);
-        game.batch.end();
+
         stage.act();
         stage.draw();
     }
@@ -158,7 +153,6 @@ public class Settings_Screen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-        extendViewport.update(width,height);
     }
 
     @Override
