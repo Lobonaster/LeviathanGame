@@ -39,9 +39,9 @@ public class MainMenuScreen implements Screen {
         Table menuButtons = new Table();
         root.add(menuButtons).expandY().expandX().left();
 
-        menuButtons.defaults().padLeft(80).spaceTop(20).width(500).height(100);
+        menuButtons.defaults().padLeft(80).spaceTop(20).width(470).height(100);
         TextButton text_button1 = new TextButton("PLAY",skin);
-        menuButtons.add(text_button1).padTop(222);
+        menuButtons.add(text_button1).padTop(200);
         text_button1.getLabel().setAlignment(Align.left);
         text_button1.getLabelCell().padLeft(40);
 
