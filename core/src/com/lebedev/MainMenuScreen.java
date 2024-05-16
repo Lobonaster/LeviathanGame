@@ -4,8 +4,6 @@ package com.lebedev;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -61,6 +59,8 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("MMS CLICKED 1");
+                VergVisuals.HP = 40 ; // For restart
+                VergVisuals.MAX_HP = 40; // For restart
                 game.setScreen(new GameScreen(game));
             }
         });
