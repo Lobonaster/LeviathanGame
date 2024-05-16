@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class PictureClass extends Actor {
     private int x_cord, y_cord;
-    private  int pic_width, pic_height;
+    private int pic_width, pic_height;
     private Texture texture;
     public void get_assets(String texture_path,int x, int y, int width, int height){
         texture = new Texture(Gdx.files.internal("assets/Pictures/"+texture_path));
