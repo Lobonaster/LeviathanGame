@@ -47,9 +47,9 @@ public class VergVisuals extends Actor {
             rolls[4] = new Animation(VERG_ANIMATION_SPEED, rollSpriteSheet[4]); // (ego)
         }
 
-        setBounds(verg_x,verg_y,VERG_WIDTH,VERG_HEIGHT);
+        setBounds(verg_x,verg_y,VERG_WIDTH-10,VERG_HEIGHT-30);
         setTouchable(Touchable.enabled);
-
+        /**
         addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -62,6 +62,7 @@ public class VergVisuals extends Actor {
                 return true;
             }
         });
+        */
     }
     public void rollSwitch(int plus_minus){ //prevents roll from going out of bounds, UNUSED for now
         roll += plus_minus;
@@ -71,6 +72,16 @@ public class VergVisuals extends Actor {
             roll = 4;
         }
     }
+
+    public void manage_HP(int amount) {
+        if (amount<0){
+            roll = 0;
+            //hit_receive = true;
+        }
+        HP += amount;
+        System.out.println("Target HP: " + HP);
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -81,17 +92,10 @@ public class VergVisuals extends Actor {
 
         /***HP UPDATE***/
         if (HP >= 1) { // Verg is alive
-            batch.draw(texture_empty, verg_x - 50, verg_y - 50, bar_width, bar_height);//static hp bar frame
-            float ratio = (float) HP / MAX_HP; // dynamic hp bar}
+            batch.draw(texture_empty, verg_x - 50, verg_y - 30, bar_width, bar_height);//static hp bar frame
 
-            if (hit_receive) {
-                System.out.println(ratio);
-                batch.draw(texture_full, verg_x - 50, verg_y - 50, (hp_width * ratio), hp_height);
-                hit_receive = false;
-            } else {
-                batch.draw(texture_full, verg_x - 44, verg_y - 44, (hp_width * ratio), hp_height);
-            }
-
+            float ratio = (float) HP / MAX_HP; // dynamic hp bar
+            batch.draw(texture_full, verg_x - 44, verg_y - 24, (hp_width * ratio), hp_height);
             /***************/
 
             stateTime += Gdx.graphics.getDeltaTime();
