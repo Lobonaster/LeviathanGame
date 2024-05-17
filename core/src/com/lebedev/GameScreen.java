@@ -3,12 +3,11 @@ package com.lebedev;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -20,12 +19,17 @@ public class GameScreen implements Screen {
     private ExtendViewport extendViewport;
     private Stage stage;
     VergVisuals vergActor = new VergVisuals();
+    private Texture temp;
 
     public GameScreen(LeviathanGame game){
         this.game = game;
 
         extendViewport = new ExtendViewport(1280, 720); // For background
         game.batch = new SpriteBatch();
+
+
+        Texture cardTexture = new Texture(Gdx.files.internal("assets/Pictures/Sprites/StrikeCard.png"));
+        Texture cardTexture2 = new Texture(Gdx.files.internal("assets/Pictures/Sprites/CardPlaceholder.png"));
 
         skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json")); //TODO: Temporary change to basic uiskin
 
@@ -41,13 +45,26 @@ public class GameScreen implements Screen {
 
         PictureClass ui_bar = new PictureClass();
         ui_bar.get_assets("Menus/Ui_Bar.png",0,650,1280,70);
+
+        TextArea label = new TextArea("HP: ",skin);
+        label.setPosition(200,670);
         stage.addActor(ui_bar);
-
-
+        stage.addActor(label);
 
         stage.addActor(vergActor);
 
         stage.addActor(root);
+
+        Table handOfCards = new Table();
+        root.add(handOfCards).bottom();
+
+        CardClass card = new CardClass(cardTexture, vergActor);
+        CardClass card2 = new CardClass(cardTexture2,vergActor);
+        card.setPosition(350, -80);
+        card2.setPosition(450, -80);
+        handOfCards.defaults();
+        handOfCards.addActor(card);
+        handOfCards.addActor(card2);
 
         Table menuButtons = new Table();
         root.add(menuButtons).expandY().expandX().right().top();
