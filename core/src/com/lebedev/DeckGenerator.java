@@ -27,12 +27,12 @@ public class DeckGenerator {
 
     private void generateDeck() {
         for (int i = 0; i < 4; i++) {
-            deck.add(new CardClass(defendTexture, targetActor,gameScreen ,5,1));
+            deck.add(new CardClass(defendTexture, targetActor,gameScreen ,5,1,"skill"));
         }
         for (int i = 0; i < 5; i++) {
-            deck.add(new CardClass(strikeTexture, targetActor, gameScreen,-6,1));
+            deck.add(new CardClass(strikeTexture, targetActor, gameScreen,-6,1,"atck"));
         }
-        deck.add(new CardClass(bashTexture, targetActor,gameScreen ,-14,2));
+        deck.add(new CardClass(bashTexture, targetActor,gameScreen ,-14,2,"atck"));
     }
 
     public ArrayList<CardClass> drawCards(int count) {

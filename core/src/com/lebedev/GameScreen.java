@@ -18,7 +18,6 @@ public class GameScreen implements Screen {
     /**
      * 20.05
      *  MAJOR CHANGES
-     *  TODO:DEFENCE CARDS HEALS INSTEAD OF SHIELDING, REMAKE THIS
      **/
 
     LeviathanGame game;
@@ -70,6 +69,7 @@ public class GameScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 resetHand();
                 vergActor.ENERGY = VergVisuals.MAX_ENERGY;
+                vergActor.SHIELDS = 0;
                 return true;
             }
         });

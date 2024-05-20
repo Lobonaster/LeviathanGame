@@ -7,16 +7,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.util.Objects;
+
 public class CardClass extends Image {
     private float startX, startY;
     private VergVisuals targetActor;
     private GameScreen gameScreen;
     private int effect;
+    private int price;
+    private String type;
 
-    public CardClass(Texture texture, VergVisuals targetActor,GameScreen gameScreen ,int effect, int price) {
+    public CardClass(Texture texture,VergVisuals targetActor,GameScreen gameScreen,int effect,int price,String type) {
         super(texture);
         this.targetActor = targetActor;
         this.effect = effect;
+        this.price = price;
+        this.type = type;
         this.gameScreen = gameScreen;
         this.addListener(new DragListener() {
             @Override
@@ -51,7 +57,14 @@ public class CardClass extends Image {
     }
 
     private void applyEffect(VergVisuals actor) {
-        actor.manage_HP(effect);
+        switch (type){
+            case ("skill"):
+                actor.SHIELDS += effect;
+                break;
+            case ("atck"):
+                actor.manage_HP(effect);
+                break;
+        }
     }
 
     public void setTargetActor(VergVisuals targetActor) {

@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import static com.badlogic.gdx.utils.Align.right;
 
 public class VergVisuals extends Actor {
     // TODO: 14.05.2024 still needs polishing
@@ -30,6 +34,12 @@ public class VergVisuals extends Actor {
     private final int hp_height = 9;
     private Texture texture_empty = new Texture("assets/Pictures/Sprites/HP_EMPTY.png");
     private Texture texture_full = new Texture("assets/Pictures/Sprites/HP_FULL.png");
+    //Shields
+    private Texture shield = new Texture("assets/Pictures/Sprites/Effects/defence.png");
+    private final int shield_width = 52;
+    private final int shield_height = 52;
+    private Label shieldLabel = new Label("22",new Skin(Gdx.files.internal("assets/skin2/uiskin.json")));
+
     /********STATS*********/
     public static int HP = 40;
     public static int MAX_HP = 40;
@@ -52,6 +62,10 @@ public class VergVisuals extends Actor {
 
         setBounds(verg_x,verg_y,VERG_WIDTH-10,VERG_HEIGHT-30);
         setTouchable(Touchable.enabled);
+
+
+        shieldLabel.setPosition(verg_x - 84, verg_y-30);
+        shieldLabel.setAlignment(right);
     }
     public void rollSwitch(int plus_minus){ //prevents roll from going out of bounds, UNUSED for now
         roll += plus_minus;
@@ -63,14 +77,20 @@ public class VergVisuals extends Actor {
     }
 
     public void manage_HP(int amount) {
-        if (amount<0){
-            roll = 0;
+        SHIELDS += amount; // Shield take damage first
+        if (SHIELDS>=0){ // If Shield stand still, then defence is successful
+            roll = 3; // Defence animation
+        } else {
+            roll = 0; // Hit animation
+            HP += SHIELDS; // If taken damage exceeds shields then damage goes to hp
         }
-        HP += amount;
         if (HP > MAX_HP){
             HP = MAX_HP; //NO OVERHEALING!
         }
-        System.out.println("Target HP: " + HP);
+        System.out.println("Target HP: " + HP+"\nSHIELDS: " + SHIELDS);
+        if (SHIELDS<0){
+            SHIELDS = 0; //No need to show negative shields
+        }
     }
 
     @Override
@@ -88,7 +108,14 @@ public class VergVisuals extends Actor {
             float ratio = (float) HP / MAX_HP; // dynamic hp bar
             batch.draw(texture_full, verg_x - 44, verg_y - 24, (hp_width * ratio), hp_height);
             /***************/
-
+            if (SHIELDS >= 1){
+                batch.draw(shield,verg_x - 98, verg_y-44,shield_width, shield_height);
+                shieldLabel.draw(batch,parentAlpha);
+                shieldLabel.setText(SHIELDS);
+            } else {
+                shieldLabel.remove();
+            }
+            /***************/
             stateTime += Gdx.graphics.getDeltaTime();
             if (roll != 2) {
                 batch.draw((TextureRegion)
