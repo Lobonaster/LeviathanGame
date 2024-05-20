@@ -12,26 +12,31 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class Settings_Screen implements Screen {
     LeviathanGame game;
     private Stage stage;
     private Skin skin;
-    private int res_width = 1280; // chosen resolution width
-    private int res_height = 720; // chosen resolution height
+    private Stage bg_stage;
 
     public Settings_Screen(LeviathanGame game){
         this.game = game;
 
-        stage = new Stage(new ExtendViewport(res_width, res_height)); // For UI
+        bg_stage = new Stage(new FillViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()));
+        PictureClass mainMenu = new PictureClass();
+        mainMenu.get_assets("Menus/Main/LeviathanMenuBG.png",0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        bg_stage.addActor(mainMenu);
+
+        stage = new Stage(new ExtendViewport(1280,720)); // For UI
         Gdx.input.setInputProcessor(stage);
 
         Table root = new Table();
         root.setFillParent(true);
 
-        PictureClass settings = new PictureClass();
-        settings.get_assets("Menus/SettingsMenu.png",0,0,1280,720);
-        stage.addActor(settings);
+        PictureClass settings2 = new PictureClass();
+        settings2.get_assets("Menus/Settings/SettingsLOGO.png",80,474,474,108);
+        stage.addActor(settings2);
 
         stage.addActor(root);
 
@@ -52,24 +57,25 @@ public class Settings_Screen implements Screen {
             }
         });
         selectBox.setItems("1280x720", "1280x800", "1920x1080","1920x1200", "2560x1440", "2560x1600", "3840x2160");
-        selectBox.setSelected("1280x720");
+        selectBox.setSelected(LeviathanGame.res_choice);
         selectBox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Process of converting a selected string into 2 int variables
                 String select = selectBox.getSelection().toString();
                 select = select.replaceAll("[{}]", "");
+                LeviathanGame.res_choice = select;
                 int index = select.indexOf("x");
                 String str1 = select.substring(0, index);
                 String str2 = select.substring(index + 1);
-                res_width = Integer.parseInt(str1); // chosen resolution
-                res_height = Integer.parseInt(str2); // chosen resolution
+                LeviathanGame.res_width = Integer.parseInt(str1); // chosen resolution
+                LeviathanGame.res_height = Integer.parseInt(str2); // chosen resolution
             }
         });
 
         root.add(menuButtons).expandY().expandX().left();
 
-        menuButtons.defaults().padLeft(80).spaceTop(20).width(470).height(100);
+        menuButtons.defaults().padLeft(90).spaceTop(20).width(450).height(100);
 
         menuButtons.row();
         Button toggle_button = new Button(skin,"toggle");
@@ -82,7 +88,7 @@ public class Settings_Screen implements Screen {
         menuButtons.row();
 
         TextButton apply_button = new TextButton("APPLY",skin);
-        menuButtons.add(apply_button).width(190);
+        menuButtons.add(apply_button).width(170);
         apply_button.getLabel().setAlignment(Align.left);
         apply_button.getLabelCell().padLeft(40);
 
@@ -109,21 +115,36 @@ public class Settings_Screen implements Screen {
                     // Prohibition to change resolution while fullscreen
                     apply_button.setDisabled(true);
                     selectBox.setDisabled(true);
+                    if (Gdx.graphics.getHeight()%100 == 0){
+                        LeviathanGame.flag = 40;
+                    }else {
+                        LeviathanGame.flag = 0;
+                    }
                 } else {
                     System.out.println("Windowed");
-                    Gdx.graphics.setWindowedMode(res_width,res_height);
+                    Gdx.graphics.setWindowedMode(LeviathanGame.res_width,LeviathanGame.res_height);
                     LeviathanGame.fullscreen = false;
                     // Allowance to change resolution while not fullscreen
                     apply_button.setDisabled(false);
                     selectBox.setDisabled(false);
+                    if (Gdx.graphics.getHeight()%100 == 0){
+                        LeviathanGame.flag = 40;
+                    }else {
+                        LeviathanGame.flag = 0;
+                    }
                 }
             }
         });
         apply_button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println(res_width +"x"+ res_height);
-                Gdx.graphics.setWindowedMode(res_width,res_height);
+                System.out.println(LeviathanGame.res_width +"x"+ LeviathanGame.res_height);
+                Gdx.graphics.setWindowedMode(LeviathanGame.res_width,LeviathanGame.res_height);
+                if (Gdx.graphics.getHeight()%100 == 0){
+                    LeviathanGame.flag = 40;
+                }else {
+                    LeviathanGame.flag = 0;
+                }
             }
         });
         return_button.addListener(new ChangeListener() {
@@ -144,14 +165,16 @@ public class Settings_Screen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(new Color(0x0f140bf7));
-
+        ScreenUtils.clear(Color.BLACK);
+        bg_stage.act();
+        bg_stage.draw();
         stage.act();
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
+        bg_stage.getViewport().update(width, height,true);
         stage.getViewport().update(width, height, true);
     }
 
