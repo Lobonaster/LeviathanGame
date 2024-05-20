@@ -9,20 +9,19 @@ import com.badlogic.gdx.scenes.scene2d.*;
 
 public class VergVisuals extends Actor {
     // TODO: 14.05.2024 still needs polishing
-    public static final int VERG_WIDTH_PIXEL = 17;
-    public static final int VERG_HEIGHT_PIXEL = 32;
-    public static final int VERG_WIDTH = VERG_WIDTH_PIXEL * 7;
-    public static final int VERG_HEIGHT = VERG_HEIGHT_PIXEL * 7;
-    public static final float VERG_ANIMATION_SPEED = 0.5f;
-    public static final float ROLL_SWITCH_TIME = 0.65f;
-    public static int HP = 10;
-    public static int MAX_HP = 40;
-    public static float verg_x  = 230;
-    private static float verg_y = 170;
-    public static float rollTimer = 0;
-    public static int roll = 2;
+    /********BASIC*********/
+    private static final int VERG_WIDTH_PIXEL = 17;
+    private static final int VERG_HEIGHT_PIXEL = 32;
+    private static final int VERG_WIDTH = VERG_WIDTH_PIXEL * 7;
+    private static final int VERG_HEIGHT = VERG_HEIGHT_PIXEL * 7;
+    private static final float VERG_ANIMATION_SPEED = 0.5f;
+    private static final float ROLL_SWITCH_TIME = 0.65f;
+    private static float verg_x  = 230;
+    private static float verg_y = 190;
+    private static float rollTimer = 0;
+    private static int roll = 2;
     private float stateTime = 0;
-    public static final Animation[] rolls = new Animation[5];
+    private static final Animation[] rolls = new Animation[5];
 
     /******HP BARS*********/
     private final int bar_width = 192;
@@ -31,8 +30,12 @@ public class VergVisuals extends Actor {
     private final int hp_height = 9;
     private Texture texture_empty = new Texture("assets/Pictures/Sprites/HP_EMPTY.png");
     private Texture texture_full = new Texture("assets/Pictures/Sprites/HP_FULL.png");
-    /**********************/
-    boolean hit_receive = false;
+    /********STATS*********/
+    public static int HP = 40;
+    public static int MAX_HP = 40;
+    public static int ENERGY = 3;
+    public static int MAX_ENERGY = 3;
+    public static int SHIELDS = 0; //WIP
 
 
     public VergVisuals(){
@@ -49,20 +52,6 @@ public class VergVisuals extends Actor {
 
         setBounds(verg_x,verg_y,VERG_WIDTH-10,VERG_HEIGHT-30);
         setTouchable(Touchable.enabled);
-        /**
-        addListener(new InputListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                //TODO: IT`S A PLACEHOLDER
-                //if u click on verg actor box, it will receive some damage
-                HP -= 9;
-                roll = 2;
-                System.out.println("OUCH!");
-                hit_receive = true;
-                return true;
-            }
-        });
-        */
     }
     public void rollSwitch(int plus_minus){ //prevents roll from going out of bounds, UNUSED for now
         roll += plus_minus;
@@ -76,9 +65,11 @@ public class VergVisuals extends Actor {
     public void manage_HP(int amount) {
         if (amount<0){
             roll = 0;
-            //hit_receive = true;
         }
         HP += amount;
+        if (HP > MAX_HP){
+            HP = MAX_HP; //NO OVERHEALING!
+        }
         System.out.println("Target HP: " + HP);
     }
 
