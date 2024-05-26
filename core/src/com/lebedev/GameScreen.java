@@ -24,7 +24,8 @@ public class GameScreen implements Screen {
     private Skin skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json"));
     private ExtendViewport extendViewport;
     private Stage stage;
-    VergVisuals vergActor = new VergVisuals();
+    Verg vergActor = new Verg();
+    enemyTest enemyActor = new enemyTest();
     private Table handTable;
     private Label remainingLabel = new Label("",skin);
     private Label discardedLabel = new Label("",skin);
@@ -49,8 +50,9 @@ public class GameScreen implements Screen {
         stage.addActor(ui_bar);
 
         stage.addActor(vergActor);
+        stage.addActor(enemyActor);
 
-        deckGenerator = new DeckGenerator( this ,vergActor);
+        deckGenerator = new DeckGenerator( this ,vergActor,enemyActor);
 
         handTable = new Table();
         handTable.bottom().padBottom(-90);
@@ -68,8 +70,13 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 resetHand();
-                vergActor.ENERGY = VergVisuals.MAX_ENERGY;
+
+                enemyTest.SHIELDS = 0;
+                enemyTest.enemy_move(vergActor);
+
+                vergActor.ENERGY = Verg.MAX_ENERGY;
                 vergActor.SHIELDS = 0;
+
                 return true;
             }
         });
@@ -152,7 +159,7 @@ public class GameScreen implements Screen {
 
         ScreenUtils.clear(Color.DARK_GRAY);
 
-        if (VergVisuals.HP < 1){
+        if (Verg.HP < 1){
             game.setScreen(new MainMenuScreen(game)); // For restart
         }
 

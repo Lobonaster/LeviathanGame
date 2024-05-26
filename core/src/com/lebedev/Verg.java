@@ -9,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import static com.badlogic.gdx.utils.Align.right;
+import static com.badlogic.gdx.utils.Align.center;
 
-public class VergVisuals extends Actor {
+public class Verg extends Actor {
     // TODO: 14.05.2024 still needs polishing
     /********BASIC*********/
     private static final int VERG_WIDTH_PIXEL = 17;
@@ -45,10 +45,10 @@ public class VergVisuals extends Actor {
     public static int MAX_HP = 40;
     public static int ENERGY = 3;
     public static int MAX_ENERGY = 3;
-    public static int SHIELDS = 0; //WIP
+    public static int SHIELDS = 0;
 
 
-    public VergVisuals(){
+    public Verg(){
         TextureRegion[][] rollSpriteSheet = TextureRegion.split(
                 new Texture("assets/Pictures/Sprites/DEMO.png"),
                 VERG_WIDTH_PIXEL, VERG_HEIGHT_PIXEL);
@@ -65,7 +65,7 @@ public class VergVisuals extends Actor {
 
 
         shieldLabel.setPosition(verg_x - 84, verg_y-30);
-        shieldLabel.setAlignment(right);
+        shieldLabel.setAlignment(center);
     }
     public void rollSwitch(int plus_minus){ //prevents roll from going out of bounds, UNUSED for now
         roll += plus_minus;
@@ -74,6 +74,9 @@ public class VergVisuals extends Actor {
         } else if (roll > 4) {
             roll = 4;
         }
+    }
+    public void perform_attack(){
+        roll = 1 ;
     }
 
     public void manage_HP(int amount) {
@@ -87,7 +90,7 @@ public class VergVisuals extends Actor {
         if (HP > MAX_HP){
             HP = MAX_HP; //NO OVERHEALING!
         }
-        System.out.println("Target HP: " + HP+"\nSHIELDS: " + SHIELDS);
+        System.out.println("\n-------\nVerg HP: " + HP+"\nSHIELDS: " + SHIELDS);
         if (SHIELDS<0){
             SHIELDS = 0; //No need to show negative shields
         }

@@ -11,11 +11,12 @@ public class DeckGenerator {
     private Texture defendTexture = new Texture(Gdx.files.internal("assets/Pictures/Sprites/Cards/Defend.png"));;
     private Texture strikeTexture = new Texture(Gdx.files.internal("assets/Pictures/Sprites//Cards/Strike.png"));
     private Texture bashTexture = new Texture(Gdx.files.internal("assets/Pictures/Sprites//Cards/Bash.png"));;
-    private VergVisuals targetActor;
+    private Verg targetActor;
+    private enemyTest targetEnemy;
     private GameScreen gameScreen;
 
-    public DeckGenerator(GameScreen gameScreen,VergVisuals targetActor) {
-
+    public DeckGenerator(GameScreen gameScreen, Verg targetActor, enemyTest targetEnemy) {
+        this.targetEnemy = targetEnemy;
         this.targetActor = targetActor;
         this.deck = new ArrayList<>();
         this.discardPile = new ArrayList<>();
@@ -27,12 +28,12 @@ public class DeckGenerator {
 
     private void generateDeck() {
         for (int i = 0; i < 4; i++) {
-            deck.add(new CardClass(defendTexture, targetActor,gameScreen ,5,1,"skill"));
+            deck.add(new CardClass(defendTexture, targetActor,targetEnemy,gameScreen ,5,1,"skill"));
         }
         for (int i = 0; i < 5; i++) {
-            deck.add(new CardClass(strikeTexture, targetActor, gameScreen,-6,1,"atck"));
+            deck.add(new CardClass(strikeTexture, targetActor,targetEnemy, gameScreen,-6,1,"atck"));
         }
-        deck.add(new CardClass(bashTexture, targetActor,gameScreen ,-14,2,"atck"));
+        deck.add(new CardClass(bashTexture, targetActor,targetEnemy,gameScreen ,-14,2,"atck"));
     }
 
     public ArrayList<CardClass> drawCards(int count) {
