@@ -32,9 +32,15 @@ public class GameScreen implements Screen {
     private Label energyLabel = new Label("",skin);
     private Label hpLabel = new Label("",skin);
     private DeckGenerator deckGenerator;
+    private RouteMapScreen routeMapScreen;
+    private int pathIndex;
+    private int buttonIndex;
 
-    public GameScreen(LeviathanGame game){
+    public GameScreen(LeviathanGame game,RouteMapScreen routeMapScreen, int pathIndex, int buttonIndex){
         this.game = game;
+        this.routeMapScreen = routeMapScreen;
+        this.pathIndex = pathIndex;
+        this.buttonIndex = buttonIndex;
 
         extendViewport = new ExtendViewport(1280, 720); // For background
 
@@ -162,7 +168,12 @@ public class GameScreen implements Screen {
         if (Verg.HP < 1){
             game.setScreen(new MainMenuScreen(game)); // For restart
         }
-
+        if (enemyTest.HP < 1){
+            routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
+            game.setScreen(routeMapScreen); // To return back to RouteMapScreen
+            this.dispose();
+            return;
+        }
         stage.act(delta);
         stage.draw();
         updateLabels();
@@ -187,7 +198,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
-
+        //stage.dispose();
     }
 
     @Override

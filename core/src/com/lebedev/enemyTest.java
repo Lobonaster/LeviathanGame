@@ -56,6 +56,7 @@ public class enemyTest extends Actor{
     public static int SHIELDS = 10;
     public static int pattern = 1;
     public static int strength = 0;
+    public static boolean dead = false;
 
     public enemyTest(){
         TextureRegion[][] rollSpriteSheet = TextureRegion.split(
@@ -185,6 +186,7 @@ public class enemyTest extends Actor{
             this.remove();// Enemy is dead and his actor removed from stage
             strength = 0; // For reset
             pattern = 1; // For reset
+            dead = true;
         }
     }
 }

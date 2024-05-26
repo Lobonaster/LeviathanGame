@@ -74,7 +74,7 @@ public class MainMenuScreen implements Screen {
                 Verg.MAX_HP = 40;
                 Verg.ENERGY = 3;
                 enemyTest.HP = 50;
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new RouteMapScreen(game));
             }
         });
         text_button2.addListener(new ChangeListener() {
