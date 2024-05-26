@@ -1,13 +1,14 @@
-//assets/Pictures/BGS/map_background.png
 package com.lebedev;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -42,9 +43,6 @@ public class RouteMapScreen implements Screen {
         pathsTable = new Table();
         pathsTable.setFillParent(true);
 
-        //Image backgroundImage = new Image(backgroundTexture);
-        //pathsTable.add(backgroundImage);
-
         for (int i = 0; i < 3; i++) {
             Table pathTable = new Table();
             pathTable.center();
@@ -55,10 +53,9 @@ public class RouteMapScreen implements Screen {
                 button.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        Verg.HP = 40 ;
-                        Verg.MAX_HP = 40;
                         Verg.ENERGY = 3;
                         enemyTest.HP = 50;
+                        enemyTest.pattern = 1;
 
                         activePath = pathIndex;
                         game.setScreen(new GameScreen(game, RouteMapScreen.this, activePath, buttonIndex));
@@ -79,6 +76,7 @@ public class RouteMapScreen implements Screen {
 
     public void updatePathProgress(int pathIndex, int buttonIndex) {
         if (pathIndex < 0 || pathIndex >= pathCompletion.length || buttonIndex < 0 || buttonIndex >= pathCompletion[pathIndex].length) {
+            boolean started = true;
             return;
         }
         pathCompletion[pathIndex][buttonIndex] = true;
@@ -86,6 +84,7 @@ public class RouteMapScreen implements Screen {
             TextButton nextButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex + 1);
             nextButton.setDisabled(false);
         }
+        Gdx.input.setInputProcessor(stage); // to regain focus
     }
 
     @Override
@@ -95,8 +94,7 @@ public class RouteMapScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(Color.GRAY);
 
         stage.act(delta);
         stage.draw();
