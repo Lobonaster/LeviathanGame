@@ -183,10 +183,10 @@ public class enemyTest extends Actor{
                         rolls[roll].getKeyFrame(stateTime, true), enemy_x, enemy_y, ENEMY_WIDTH, ENEMY_HEIGHT);
             }
         } else {
-            this.remove();// Enemy is dead and his actor removed from stage
             strength = 0; // For reset
             pattern = 1; // For reset
             dead = true;
+            this.remove();// Enemy is dead and his actor removed from stage
         }
     }
 }

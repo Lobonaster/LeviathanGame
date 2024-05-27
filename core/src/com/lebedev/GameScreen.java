@@ -168,7 +168,7 @@ public class GameScreen implements Screen {
         if (Verg.HP < 1){
             game.setScreen(new MainMenuScreen(game)); // For restart
         }
-        if (enemyTest.HP < 1){
+        if (enemyTest.dead){
             routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
             game.setScreen(routeMapScreen); // To return back to RouteMapScreen
             this.dispose();

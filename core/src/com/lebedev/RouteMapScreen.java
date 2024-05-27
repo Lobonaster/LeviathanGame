@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import static com.lebedev.LeviathanGame.flag;
+
 public class RouteMapScreen implements Screen {
 
     private LeviathanGame game;
@@ -25,7 +27,7 @@ public class RouteMapScreen implements Screen {
 
     public RouteMapScreen(LeviathanGame game) {
         this.game = game;
-        this.stage = new Stage(new ExtendViewport(1280, 720));
+        this.stage = new Stage(new ExtendViewport(1280, 720+flag));
         this.skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json"));
         Gdx.input.setInputProcessor(stage);
 
@@ -36,6 +38,21 @@ public class RouteMapScreen implements Screen {
 
         pathCompletion = new boolean[3][14]; // 3 paths, each with 14 steps
         initializePaths();
+
+        TextButton return_button = new TextButton("ESC",skin);
+        return_button.setPosition(1215,655);
+        return_button.setWidth(50);
+        return_button.setHeight(50);
+        stage.addActor(return_button);
+
+        return_button.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("ESC");
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
         stage.setDebugAll(true);
     }
 
@@ -49,24 +66,25 @@ public class RouteMapScreen implements Screen {
             for (int j = 0; j < 14; j++) {
                 final int pathIndex = i;
                 final int buttonIndex = j;
-                TextButton button = new TextButton("Step " + (j + 1), skin);
+                TextButton button = new TextButton("stage " + (j + 1), skin);
                 button.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
                         Verg.ENERGY = 3;
                         enemyTest.HP = 50;
-                        enemyTest.pattern = 1;
+                        enemyTest.dead = false;
 
                         activePath = pathIndex;
+                        BlockStarterButtons(activePath,pathIndex,buttonIndex);
                         game.setScreen(new GameScreen(game, RouteMapScreen.this, activePath, buttonIndex));
                     }
                 });
                 if (j > 0) {
                     button.setDisabled(true);
                 }
-                pathTable.add(button).padTop(23).pad(15).row();
+                pathTable.add(button).width(60).height(50).padTop(23).padRight(30).padLeft(30).row();
             }
-            pathsTable.add(pathTable).center().pad(10);
+            pathsTable.add(pathTable).top().padRight(30).padLeft(30).padBottom(400);
         }
 
         ScrollPane scrollPane = new ScrollPane(pathsTable);
@@ -81,10 +99,21 @@ public class RouteMapScreen implements Screen {
         }
         pathCompletion[pathIndex][buttonIndex] = true;
         if (buttonIndex < pathCompletion[pathIndex].length - 1) {
+            TextButton previousButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex);
+            previousButton.setDisabled(true);
             TextButton nextButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex + 1);
             nextButton.setDisabled(false);
         }
         Gdx.input.setInputProcessor(stage); // to regain focus
+    }
+
+    public void BlockStarterButtons(int activePath, int pathIndex, int buttonIndex) {
+        for (pathIndex = 0; pathIndex < 3; pathIndex++) {
+            if (pathIndex != activePath) {
+                TextButton startButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex);
+                startButton.setDisabled(true);
+            }
+        }
     }
 
     @Override
