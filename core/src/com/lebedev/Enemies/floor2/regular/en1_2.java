@@ -1,19 +1,19 @@
-package com.lebedev;
+package com.lebedev.Enemies.floor2.regular;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
+import com.lebedev.Verg;
+import com.lebedev.enemyTest;
 
 import static com.badlogic.gdx.utils.Align.center;
 
-public class enemyTest extends Actor{
-    // TODO: make enemy maker
+public class en1_2 extends enemyTest {
     private static final int ENEMY_WIDTH_PIXEL = 17;
     private static final int ENEMY_HEIGHT_PIXEL = 32;
     private static final int ENEMY_WIDTH = ENEMY_WIDTH_PIXEL * 7;
@@ -23,10 +23,9 @@ public class enemyTest extends Actor{
     private static float enemy_x  = 830;
     private static float enemy_y = 190;
     private static float rollTimer = 0;
-    public static int roll = 2;
+    private static int roll = 2;
     private float stateTime = 0;
     private static final Animation[] rolls = new Animation[5];
-
     /******HP BARS*********/
     private final int bar_width = 192;
     private final int bar_height = 18;
@@ -54,16 +53,13 @@ public class enemyTest extends Actor{
     public static int MAX_HP = 50;
     public static int HP = 50;
     public static int SHIELDS = 10;
-    public static int moveType = 1; // 1: attack, 2: buff, 3: shield
+    public static int pattern = 1;
     public static int strength = 0;
     public static boolean dead = false;
-    public static int attack_damage = 0;
 
-    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/enemyDEMO.png");
-
-    public enemyTest(){
+    public en1_2(){
         TextureRegion[][] rollSpriteSheet = TextureRegion.split(
-                enemySprite,
+                new Texture("assets/Pictures/Sprites/enemyDEMO.png"),
                 ENEMY_WIDTH_PIXEL, ENEMY_HEIGHT_PIXEL);
         {
             rolls[0] = new Animation(ENEMY_ANIMATION_SPEED, rollSpriteSheet[2]); //  (hit)
@@ -85,16 +81,10 @@ public class enemyTest extends Actor{
         attackLabel.setAlignment(center);
         effect_Label1.setPosition(enemy_x  - 42, enemy_y-59);
         effect_Label1.setAlignment(center);
-
     }
-    public static void set_stats(int hp, int maxHP,int shields, int attack_dmg){
+    public static void set_stats(int hp, int maxHP){
         HP = hp;
         MAX_HP = maxHP;
-        SHIELDS = shields;
-        attack_damage = attack_dmg;
-    }
-    public static void set_graphics(Texture texture){
-        enemySprite =  new Texture(String.valueOf(texture));
     }
 
     public void manage_HP(int amount) {
@@ -114,8 +104,26 @@ public class enemyTest extends Actor{
         }
     }
     public static void enemy_move(){
-        // 1: attack, 2: buff, 3: shield
-        moveType = EnemyMaker.get_move();
+        switch (pattern){
+            case 1:
+                roll = 1;
+                Verg.manage_HP(-6 - strength);
+                break;
+            case 2:
+                HP += 7;
+                if (HP > MAX_HP){
+                    HP = MAX_HP;
+                }
+                strength += 2;
+                break;
+            case 3:
+                SHIELDS += 10;
+                break;
+        }
+        if (pattern>=3){
+            pattern = 0;
+        }
+        pattern +=1;
     }
 
     @Override
@@ -149,11 +157,11 @@ public class enemyTest extends Actor{
                 effect_Label1.setText(strength);
             }
             /***NEXT TURN MOVE***/
-            switch (moveType){
+            switch (pattern){
                 case 1:
                     batch.draw(attack,enemy_x + 30, enemy_y+220, icon_width, icon_height);
                     attackLabel.draw(batch,parentAlpha);
-                    attackLabel.setText(attack_damage+strength);
+                    attackLabel.setText(6+strength);
                     break;
                 case 2:
                     batch.draw(buff,enemy_x + 30, enemy_y+220, icon_width, icon_height);
@@ -179,8 +187,10 @@ public class enemyTest extends Actor{
             }
         } else {
             strength = 0; // For reset
-            dead = true;// For reset
+            pattern = 1; // For reset
+            dead = true;
             this.remove();// Enemy is dead and his actor removed from stage
+
         }
     }
 }

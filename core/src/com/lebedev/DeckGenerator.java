@@ -31,9 +31,9 @@ public class DeckGenerator {
             deck.add(new CardClass(defendTexture, targetActor,targetEnemy,gameScreen ,5,1,"skill"));
         }
         for (int i = 0; i < 5; i++) {
-            deck.add(new CardClass(strikeTexture, targetActor,targetEnemy, gameScreen,-6,1,"atck"));
+            deck.add(new CardClass(strikeTexture, targetActor,targetEnemy, gameScreen,-18,1,"atck"));
         }
-        deck.add(new CardClass(bashTexture, targetActor,targetEnemy,gameScreen ,-14,2,"atck"));
+        deck.add(new CardClass(bashTexture, targetActor,targetEnemy,gameScreen ,-118,2,"atck"));
     }
 
     public ArrayList<CardClass> drawCards(int count) {

@@ -12,6 +12,9 @@ public class LeviathanGame extends Game {
 	public static int res_width = 1280; // chosen resolution width
 	public static int res_height = 720; // chosen resolution height
 
+	public static int current_level = 1;
+	public static boolean boss_battle = false;
+
 	@Override
 	public void create () {
 		this.setScreen(new MainMenuScreen(this));

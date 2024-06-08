@@ -79,7 +79,7 @@ public class Verg extends Actor {
         roll = 1 ;
     }
 
-    public void manage_HP(int amount) {
+    public static void manage_HP(int amount) {
         SHIELDS += amount; // Shield take damage first
         if (SHIELDS>=0){ // If Shield stand still, then defence is successful
             roll = 3; // Defence animation
@@ -94,6 +94,14 @@ public class Verg extends Actor {
         if (SHIELDS<0){
             SHIELDS = 0; //No need to show negative shields
         }
+    }
+    public static void heal_HP(int amount) { // When you need to heal trough shields
+        HP += amount;
+
+        if (HP > MAX_HP){
+            HP = MAX_HP; //NO OVERHEALING!
+        }
+
     }
 
     @Override

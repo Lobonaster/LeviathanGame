@@ -11,21 +11,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GameScreen implements Screen {
-    /**
-     * 20.05
-     *  MAJOR CHANGES
-     **/
 
     LeviathanGame game;
     private Skin skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json"));
     private ExtendViewport extendViewport;
     private Stage stage;
     Verg vergActor = new Verg();
-    enemyTest enemyActor = new enemyTest();
     private Table handTable;
     private Label remainingLabel = new Label("",skin);
     private Label discardedLabel = new Label("",skin);
@@ -35,6 +32,7 @@ public class GameScreen implements Screen {
     private RouteMapScreen routeMapScreen;
     private int pathIndex;
     private int buttonIndex;
+    enemyTest enemyActor = new enemyTest();
 
     public GameScreen(LeviathanGame game,RouteMapScreen routeMapScreen, int pathIndex, int buttonIndex){
         this.game = game;
@@ -56,6 +54,8 @@ public class GameScreen implements Screen {
         stage.addActor(ui_bar);
 
         stage.addActor(vergActor);
+
+
         stage.addActor(enemyActor);
 
         deckGenerator = new DeckGenerator( this ,vergActor,enemyActor);
@@ -71,14 +71,14 @@ public class GameScreen implements Screen {
         stage.addActor(scrollPane);
         createHand();
 
-        TextButton resetButton = new TextButton("Reset Hand", skin);
+        TextButton resetButton = new TextButton("End Turn", skin);
         resetButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 resetHand();
 
                 enemyTest.SHIELDS = 0;
-                enemyTest.enemy_move(vergActor);
+                enemyTest.enemy_move();
 
                 vergActor.ENERGY = Verg.MAX_ENERGY;
                 vergActor.SHIELDS = 0;
@@ -86,6 +86,10 @@ public class GameScreen implements Screen {
                 return true;
             }
         });
+        //resetButton.setPosition(1200,200);
+        resetButton.setBounds(1060,120,100,100);
+        stage.addActor(resetButton);
+
 
         Table uiTable = new Table();
         uiTable.top().pad(15);
@@ -101,7 +105,6 @@ public class GameScreen implements Screen {
         uiTable.add(energyLabel).pad(10);
         uiTable.add(remainingLabel).pad(10);
         uiTable.add(discardedLabel).pad(10);
-        uiTable.add(resetButton).pad(10);
 
         TextButton return_button = new TextButton("ESC",skin);
         uiTable.add(return_button.pad(10)).right();
@@ -168,7 +171,13 @@ public class GameScreen implements Screen {
         if (Verg.HP < 1){
             game.setScreen(new MainMenuScreen(game)); // For restart
         }
-        if (enemyTest.dead){
+        if (enemyActor.dead){
+            if (LeviathanGame.boss_battle){
+                LeviathanGame.boss_battle = false;
+                LeviathanGame.current_level++;
+                game.setScreen(new RouteMapScreen(game)); // To go to level 2
+                return;
+            }
             routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
             game.setScreen(routeMapScreen); // To return back to RouteMapScreen
             this.dispose();
