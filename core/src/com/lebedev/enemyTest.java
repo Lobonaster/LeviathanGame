@@ -24,6 +24,7 @@ public class enemyTest extends Actor{
     private static float enemy_y = 190;
     private static float rollTimer = 0;
     public static int roll = 2;
+    public static int phaseRoll = 2; // for changing phase
     private float stateTime = 0;
     private static final Animation[] rolls = new Animation[5];
 
@@ -59,6 +60,7 @@ public class enemyTest extends Actor{
     public static boolean dead = false;
     public static int attack_damage = 0;
 
+
     public static Texture enemySprite = new Texture("assets/Pictures/Sprites/enemyDEMO.png");
 
     public enemyTest(){
@@ -86,15 +88,6 @@ public class enemyTest extends Actor{
         effect_Label1.setPosition(enemy_x  - 42, enemy_y-59);
         effect_Label1.setAlignment(center);
 
-    }
-    public static void set_stats(int hp, int maxHP,int shields, int attack_dmg){
-        HP = hp;
-        MAX_HP = maxHP;
-        SHIELDS = shields;
-        attack_damage = attack_dmg;
-    }
-    public static void set_graphics(Texture texture){
-        enemySprite =  new Texture(String.valueOf(texture));
     }
 
     public void manage_HP(int amount) {
@@ -126,7 +119,6 @@ public class enemyTest extends Actor{
     @Override
     public void draw(Batch batch, float parentAlpha){
 
-        /***PATTERN UPDATE***/
         if (HP >= 1) { // Enemy is alive
             batch.draw(texture_empty, enemy_x - 50, enemy_y - 30, bar_width, bar_height);//static hp bar frame
 
@@ -134,7 +126,7 @@ public class enemyTest extends Actor{
             batch.draw(texture_full, enemy_x - 44, enemy_y - 24, (hp_width * ratio), hp_height);
             hpLabel.draw(batch,parentAlpha);
             hpLabel.setText(HP+"/"+MAX_HP);
-            /***************/
+            /****SHIELDS*****/
             if (SHIELDS >= 1){
                 batch.draw(shield,enemy_x - 98, enemy_y-44, icon_width, icon_height);
                 shieldLabel.draw(batch,parentAlpha);
@@ -164,20 +156,21 @@ public class enemyTest extends Actor{
             }
             /***************/
             stateTime += Gdx.graphics.getDeltaTime();
-            if (roll != 2) {
+            if (roll != phaseRoll) {
                 batch.draw((TextureRegion)
                         rolls[roll].getKeyFrame(stateTime, true), enemy_x, enemy_y, ENEMY_WIDTH, ENEMY_HEIGHT);
 
                 rollTimer += Gdx.graphics.getDeltaTime();
                 if (Math.abs(rollTimer) > ROLL_SWITCH_TIME) {
                     rollTimer = 0;
-                    roll = 2;
+                    roll = phaseRoll;
                 }
             } else {
                 batch.draw((TextureRegion)
                         rolls[roll].getKeyFrame(stateTime, true), enemy_x, enemy_y, ENEMY_WIDTH, ENEMY_HEIGHT);
             }
         } else {
+            phaseRoll = 2;
             strength = 0; // For reset
             dead = true;// For reset
             this.remove();// Enemy is dead and his actor removed from stage

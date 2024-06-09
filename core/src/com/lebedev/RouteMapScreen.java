@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
@@ -15,19 +16,20 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import java.util.Random;
 
 
+import static com.lebedev.LeviathanGame.current_level;
 import static com.lebedev.LeviathanGame.flag;
 
 public class RouteMapScreen implements Screen {
 
     private LeviathanGame game;
     private Stage stage;
-    private Skin skin;
-    private Texture backgroundTexture;
-    private PictureClass background;
     private Table pathsTable;
     private boolean[][] pathCompletion;
     private int activePath = -1;
     private ExtendViewport extendViewport = new ExtendViewport(1280,720+flag);
+    private final Skin skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json"));
+    private Label hpLabel = new Label("",skin);
+    private Label remainingLabel = new Label("",skin);
 
     TextButton boss_button;
 
@@ -35,10 +37,10 @@ public class RouteMapScreen implements Screen {
         this.game = game;
         this.stage = new Stage(extendViewport);
 
-        this.skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json"));
-        Gdx.input.setInputProcessor(stage);
+        System.out.println("Creating a new stage");
+        LeviathanGame.inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer); // to regain focus
 
-        backgroundTexture = new Texture(Gdx.files.internal("assets/Pictures/BGS/stage1.png"));
         PictureClass background = new PictureClass();
         background.get_assets("BGS/map_background.png",390,0,500,1500);
         stage.addActor(background);
@@ -49,6 +51,19 @@ public class RouteMapScreen implements Screen {
         pathCompletion = new boolean[3][14]; // 3 paths, each with 14 steps
         initializePaths();
         stage.addActor(ui_bar);
+        hpLabel = new Label("HP: "+Verg.HP+" / "+Verg.MAX_HP, skin);
+        hpLabel.setAlignment(Align.center);
+        hpLabel.setWrap(false);
+        hpLabel.setFontScale(1.5f);
+        hpLabel.setBounds(100,650+flag*2,180,60);
+        stage.addActor(hpLabel);
+
+        remainingLabel = new Label("Remaining: X" , skin);
+        remainingLabel.setAlignment(Align.center);
+        remainingLabel.setWrap(false);
+        remainingLabel.setFontScale(1.5f);
+        remainingLabel.setBounds(300,650+flag*2,180,60);
+        stage.addActor(remainingLabel);
 
         TextButton return_button = new TextButton("ESC",skin);
         return_button.setPosition(1215,(int) extendViewport.getMinWorldHeight()-65+ flag);
@@ -76,15 +91,20 @@ public class RouteMapScreen implements Screen {
             for (int j = 0; j < 14; j++) {
                 final int pathIndex = i;
                 final int buttonIndex = j;
-
-                final Random buttonRandom = new Random();
-                int random_button_type = buttonRandom.nextInt(3); //!!!!!!!!!!! 3
+                final int random_button_type;
+                if(j>0) {
+                    final Random buttonRandom = new Random();
+                    random_button_type = buttonRandom.nextInt(101); //!!!!!!!!!!! 3
+                }else {
+                    random_button_type = 0; //first room always enemy
+                }
 
                 TextButton button = ButtonMaker(random_button_type,pathIndex,buttonIndex);
 
                 if (j > 0) {
                     button.setDisabled(true);
                 }
+                changeColor(button);
                 pathTable.add(button).width(60).height(50).padTop(23).padRight(30).padLeft(30).row();
             }
 
@@ -105,6 +125,7 @@ public class RouteMapScreen implements Screen {
                     }
                 });
                 boss_button.setDisabled(true);
+                changeColor(boss_button);
                 pathTable.add(boss_button).width(80).height(60).padTop(23).padRight(20).padLeft(20).row();
             }
 
@@ -116,18 +137,24 @@ public class RouteMapScreen implements Screen {
     }
 
     public void updatePathProgress(int pathIndex, int buttonIndex) {
-        Gdx.input.setInputProcessor(stage); // to regain focus
+        LeviathanGame.inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer); // to regain focus
 
+        hpLabel.setText("HP: "+Verg.HP+" / "+Verg.MAX_HP);
         pathCompletion[pathIndex][buttonIndex] = true;
         if (buttonIndex < pathCompletion[pathIndex].length - 1) {
             TextButton previousButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex);
             previousButton.setDisabled(true);
+            changeColor(previousButton);
             TextButton nextButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex + 1);
             nextButton.setDisabled(false);
+            changeColor(nextButton);
         } else {
             TextButton previousButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(13);
             previousButton.setDisabled(true);
+            changeColor(previousButton);
             boss_button.setDisabled(false);
+            changeColor(boss_button);
         }
     }
 
@@ -136,12 +163,21 @@ public class RouteMapScreen implements Screen {
             if (pathIndex != activePath) {
                 TextButton startButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex);
                 startButton.setDisabled(true);
+                changeColor(startButton);
             }
         }
     }
     private TextButton ButtonMaker(int random_button_type,int pathIndex, int buttonIndex){
         TextButton button = new TextButton("placeholder", skin);
-        switch (random_button_type){
+        int button_type = -1;
+        if (random_button_type < 60) { // 60% for enemy
+            button_type = 0;
+        } else if (59 < random_button_type && random_button_type< 81) { //20% For Elite
+            button_type = 1;
+        } else { //20% For Event
+            button_type = 2;
+        }
+        switch (button_type){
             case 0:
                 button = new TextButton("Enemy"+"F"+LeviathanGame.current_level, skin);
                 button.addListener(new ChangeListener() {
@@ -178,7 +214,6 @@ public class RouteMapScreen implements Screen {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
                         Verg.ENERGY = Verg.MAX_ENERGY;
-                        Verg.heal_HP(5);
 
                         activePath = pathIndex;
                         BlockStarterButtons(activePath,pathIndex,buttonIndex);
@@ -193,6 +228,15 @@ public class RouteMapScreen implements Screen {
     private void makeEnemies(String enemy_type){
         EnemyMaker.enemyMaker(enemy_type);
     };
+    private void changeColor(TextButton button){
+        if (button.isDisabled()) {
+            button.getLabel().setColor(Color.GRAY);
+            button.setColor(Color.WHITE);
+        }else {
+            button.getLabel().setColor(Color.RED);
+            button.setColor(Color.SLATE);
+        }
+    }
 
     @Override
     public void show() {
@@ -222,16 +266,17 @@ public class RouteMapScreen implements Screen {
 
     @Override
     public void resume() {
-        // nothing to do here
+
     }
 
     @Override
     public void hide() {
-        // nothing to do here
+        LeviathanGame.inputMultiplexer.removeProcessor(stage);
     }
 
     @Override
     public void dispose() {
+        LeviathanGame.inputMultiplexer.removeProcessor(stage);
         stage.dispose();
         skin.dispose();
     }

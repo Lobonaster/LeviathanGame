@@ -11,6 +11,9 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import static com.lebedev.LeviathanGame.flag;
 
 public class EventScreen implements Screen {
@@ -22,6 +25,11 @@ public class EventScreen implements Screen {
     private RouteMapScreen routeMapScreen;
     private int pathIndex;
     private int buttonIndex;
+    private Label hpLabel = new Label("",skin);
+    private Label textLabel = new Label("",skin);
+    private DeckGenerator deckGenerator;
+    Verg vergActor = new Verg();
+    enemyTest enemyActor = new enemyTest();
 
     public EventScreen(LeviathanGame game,RouteMapScreen routeMapScreen, int pathIndex, int buttonIndex){
         this.game = game;
@@ -30,20 +38,27 @@ public class EventScreen implements Screen {
         this.buttonIndex = buttonIndex;
 
         extendViewport = new ExtendViewport(1280, 720+flag);
-
         stage = new Stage(extendViewport);
-        Gdx.input.setInputProcessor(stage);
+
+        LeviathanGame.inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer);
 
         Table root = new Table();
         root.setFillParent(true);
 
-        PictureClass pic = new PictureClass();
-        pic.get_assets("Buttons/exit.png", 100, (int) extendViewport.getMinWorldHeight()/2-80+LeviathanGame.flag*2, 290,180);
-        stage.addActor(pic);
+        deckGenerator = new DeckGenerator( this ,vergActor,enemyActor);
+
+        PictureClass bg1 = new PictureClass();
+        bg1.get_assets("BGS/stage1.png", 0, 0, 1280,720);
+        stage.addActor(bg1);
 
         PictureClass ui_bar = new PictureClass();
         ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+LeviathanGame.flag, 1280,80);
         stage.addActor(ui_bar);
+
+        PictureClass bg = new PictureClass();
+        bg.get_assets("BGS/event.png", 0, 0, 1280,720);
+        stage.addActor(bg);
 
         TextButton return_button = new TextButton("ESC",skin);
         return_button.setPosition(1215,(int) extendViewport.getMinWorldHeight()-65+ flag);
@@ -57,32 +72,200 @@ public class EventScreen implements Screen {
                 game.setScreen(new MainMenuScreen(game));
             }
         });
+        /**
+         * deciding event type based on randomness
+         * WHERE:
+         * 0 - Plus 8 MAX and HP / Get a strong strike card
+         * 1 - Increase DrawCard and decrease 10 HP / Increase MaxEnergy and heavily decrease HP and 18 MaxHp / Skip
+         * 2 - Start next battle with 30 shields and 10 HP / get 1 strength and 7 DMG / get 14 MaxHP and curse
+         */
+        PictureClass pic = new PictureClass();
+
+        final Random buttonRandom = new Random();
+        int event_type = buttonRandom.nextInt(3);
+        System.out.println(event_type);
+
+        TextButton choice1 = new TextButton("",skin);
+        TextButton choice2 = new TextButton("",skin);
+        TextButton choice3 = new TextButton("",skin);
+
+        switch(event_type){
+            case 0:
+                pic.get_assets("Buttons/hmm.png", 55, 70, 460,460);
+                textLabel = new Label("Life and death",skin);
+                choice1.setText("+8 HP and MaxHP");
+                choice1.getLabel().setColor(Color.GREEN);
+                choice2.setText("Get a strong strike card");
+                choice2.getLabel().setColor(Color.GREEN);
+                break;
+            case 1:
+                pic.get_assets("Buttons/brick.png", 55, 70, 460,460);
+                textLabel = new Label("Momentary opportunity",skin);
+                choice1.setText("Increase DrawCard and decrease 10 HP");
+                choice1.getLabel().setColor(Color.ORANGE);
+                choice2.setText("Increase MaxEnergy by 1 and decrease HP and MaxHp by 18");
+                choice2.getLabel().setColor(Color.RED);
+                choice3.setText("Skip");
+                choice3.getLabel().setColor(Color.WHITE);
+                break;
+            case 2:
+                pic.get_assets("Buttons/exit.png", 55, 70, 460,460);
+                textLabel = new Label("Slight relief",skin);
+                choice1.setText("Start next battle with 30 shields and heal 10 HP");
+                choice1.getLabel().setColor(Color.GREEN);
+                choice2.setText("Get 1 strength and 7 DMG");
+                choice2.getLabel().setColor(Color.ORANGE);
+                choice3.setText("Get 14 MaxHP and curse");
+                choice3.getLabel().setColor(Color.DARK_GRAY);
+                break;
+        }
+
+        stage.addActor(pic);
+
+        hpLabel = new Label("HP: "+Verg.HP+" / "+Verg.MAX_HP, skin);
+        hpLabel.setAlignment(Align.center);
+        hpLabel.setWrap(false);
+        hpLabel.setFontScale(1.5f);
+        hpLabel.setBounds(100,650+flag*2,200,60);
+        stage.addActor(hpLabel);
+
+
+        textLabel.setAlignment(Align.center);
+        textLabel.setColor(Color.BLACK);
+        textLabel.setWrap(true);
+        textLabel.setFontScale(1.0f);
+        textLabel.setBounds(140,565,240,30);
+        stage.addActor(textLabel);
+
+        updateLabel();
+
 
         Table menuButtons = new Table();
 
-        root.add(menuButtons).expandY().expandX().right();
+        root.add(menuButtons).expandY().expandX().right().padTop(200);
 
-        menuButtons.defaults().padRight(70).spaceTop(20).width(450).height(100);
+        menuButtons.defaults().padRight(70).spaceTop(20).width(600).height(80);
 
         menuButtons.row();
 
-        TextButton choice1 = new TextButton("Choice 1",skin);
-        menuButtons.add(choice1);
+
+        menuButtons.add(choice1).padTop(50+flag);
         choice1.getLabel().setAlignment(Align.left);
         choice1.getLabelCell().padRight(40);
 
-        //menuButtons.add().width(260).height(100).padLeft(20);
-
         menuButtons.row();
-        TextButton choice2 = new TextButton("Choice 2",skin);
+;
         menuButtons.add(choice2);
         choice2.getLabel().setAlignment(Align.left);
         choice2.getLabelCell().padRight(40);
+
+        if (event_type == 1 || event_type == 2){
+
+        menuButtons.row();
+
+        menuButtons.add(choice3);
+        choice3.getLabel().setAlignment(Align.left);
+        choice3.getLabelCell().padRight(40);
+        }
+
+        choice1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                switch (event_type){
+                    case 0:
+                        Verg.MAX_HP+=8;
+                        Verg.heal_HP(8);
+                        break;
+                    case 1:
+                        Verg.Drawable_cards++;
+                        Verg.manage_HP(-8);
+                        break;
+                    case 2:
+                        Verg.SHIELDS += 30;
+                        Verg.heal_HP(10);
+                        break;
+                }
+                routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
+                game.setScreen(routeMapScreen); // To return back to RouteMapScreen
+                dispose();
+            }
+        });
+
+        choice2.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                switch (event_type){
+                    case 0:
+                        deckGenerator.addCard("verticalSlash");
+                        break;
+                    case 1:
+                        Verg.MAX_ENERGY++;
+                        Verg.MAX_HP -= 18;
+                        Verg.heal_HP(-18);
+                        break;
+                    case 2:
+                        Verg.strength++;
+                        Verg.heal_HP(-7);
+                        break;
+                }
+
+                if (Verg.HP < 1){
+                    LeviathanGame.global_deck = new ArrayList<>(); //clear new cards deck
+                    game.setScreen(new MainMenuScreen(game)); // For restart
+                    return;
+                }
+
+                routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
+                game.setScreen(routeMapScreen); // To return back to RouteMapScreen
+                dispose();
+            }
+        });
+
+        /**
+         * deciding event type based on randomness
+         * WHERE:
+         * 0 - Plus 8 MAX and HP / Get a strong strike card
+         * 1 - Increase DrawCard and decrease 10 HP / Increase MaxEnergy and heavily decrease HP and 18 MaxHp / Skip
+         * 2 - Start next battle with 30 shields and heal 10 HP / get 1 strength and 7 DMG / get 14 MaxHP and curse
+         */
+        choice3.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                switch (event_type){
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        Verg.MAX_HP += 14;
+                        deckGenerator.addCard("curse");
+                        break;
+                }
+
+                if (Verg.HP < 1){
+                    LeviathanGame.global_deck = new ArrayList<>(); //clear new cards deck
+                    game.setScreen(new MainMenuScreen(game)); // For restart
+                    return;
+                }
+
+                routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
+                game.setScreen(routeMapScreen); // To return back to RouteMapScreen
+                dispose();
+            }
+        });
+
 
         stage.addActor(root);
         stage.setDebugAll(true);
 
     }
+
+    private void updateLabel() {
+        hpLabel.setText("HP: "+Verg.HP+" / "+Verg.MAX_HP);
+    }
+
     @Override
     public void show() {
 
@@ -90,10 +273,11 @@ public class EventScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.DARK_GRAY);
+        ScreenUtils.clear(Color.SLATE);
 
         stage.draw();
         stage.act(delta);
+        updateLabel();
     }
 
     @Override
@@ -118,6 +302,7 @@ public class EventScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        LeviathanGame.inputMultiplexer.removeProcessor(stage);
+        stage.dispose();
     }
 }

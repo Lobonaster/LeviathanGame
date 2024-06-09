@@ -28,7 +28,9 @@ public class MainMenuScreen implements Screen {
         bg_stage.addActor(mainMenu);
 
         stage = new Stage(new ExtendViewport(1280, 720));
-        Gdx.input.setInputProcessor(stage);
+
+        LeviathanGame.inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer);
 
         Table root = new Table();
         root.setFillParent(true);
@@ -68,26 +70,24 @@ public class MainMenuScreen implements Screen {
         text_button1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("MMS CLICKED 1");
                 // For restart
                 Verg.HP = 40 ;
                 Verg.MAX_HP = 40;
-                Verg.ENERGY = 3;
-                enemyTest.HP = 50;
+                Verg.MAX_ENERGY = 3;
                 game.setScreen(new RouteMapScreen(game));
+                dispose();
             }
         });
         text_button2.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("MMS CLICKED 2");
                 game.setScreen(new Settings_Screen(game));
+                dispose();
             }
         });
         text_button3.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("MMS CLICKED 3 AND EXIT");
                 Gdx.app.exit();
             }
         });
@@ -132,6 +132,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+        LeviathanGame.inputMultiplexer.removeProcessor(stage);
         stage.dispose();
     }
 }

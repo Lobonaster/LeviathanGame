@@ -14,9 +14,11 @@ public class CardClass extends Image {
     private GameScreen gameScreen;
     private int effect;
     private int price;
+    private String soundEffectName;
     private String type;
 
-    public CardClass(Texture texture, Verg targetActor, enemyTest enemy, GameScreen gameScreen, int effect, int price, String type) {
+    public CardClass(Texture texture, Verg targetActor, enemyTest enemy,
+                     GameScreen gameScreen, int effect, int price, String type, String soundEffectName) {
         super(texture);
         this.enemy = enemy;
         this.targetActor = targetActor;
@@ -24,6 +26,7 @@ public class CardClass extends Image {
         this.price = price;
         this.type = type;
         this.gameScreen = gameScreen;
+        this.soundEffectName = soundEffectName;
 
         this.addListener(new DragListener() {
             @Override
@@ -42,11 +45,13 @@ public class CardClass extends Image {
             public void dragStop(InputEvent event, float x, float y, int pointer) {
                 if (isOverlapping(targetActor) && type.equals("skill") && Verg.ENERGY != 0 && price <= Verg.ENERGY) {
                     Verg.ENERGY -= price;
+                    SoundMaker.makeSound(soundEffectName);
                     applyEffect(targetActor);
                     gameScreen.addToDiscardPile(CardClass.this);
                     remove();
                 } else if (isOverlapping(enemy) && type.equals("atck") && Verg.ENERGY != 0 && price <= Verg.ENERGY) {
                     Verg.ENERGY -= price;
+                    SoundMaker.makeSound(soundEffectName);
                     applyEffectEnemy(enemy,targetActor);
                     gameScreen.addToDiscardPile(CardClass.this);
                     remove();

@@ -20,18 +20,18 @@ public class GameScreen implements Screen {
 
     LeviathanGame game;
     private Skin skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json"));
-    private ExtendViewport extendViewport;
+    private final ExtendViewport extendViewport;
     private Stage stage;
     Verg vergActor = new Verg();
-    private Table handTable;
+    private final Table handTable;
     private Label remainingLabel = new Label("",skin);
     private Label discardedLabel = new Label("",skin);
     private Label energyLabel = new Label("",skin);
     private Label hpLabel = new Label("",skin);
     private DeckGenerator deckGenerator;
     private RouteMapScreen routeMapScreen;
-    private int pathIndex;
-    private int buttonIndex;
+    private final int pathIndex;
+    private final int buttonIndex;
     enemyTest enemyActor = new enemyTest();
 
     public GameScreen(LeviathanGame game,RouteMapScreen routeMapScreen, int pathIndex, int buttonIndex){
@@ -43,7 +43,15 @@ public class GameScreen implements Screen {
         extendViewport = new ExtendViewport(1280, 720); // For background
 
         stage = new Stage(extendViewport);
-        Gdx.input.setInputProcessor(stage);
+
+        LeviathanGame.inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer);
+
+        if (LeviathanGame.current_level == 1 && LeviathanGame.boss_battle){
+            BG_Music.startMusic("09_STS",true);
+        } else if (LeviathanGame.current_level == 2 && LeviathanGame.boss_battle){
+            BG_Music.startMusic("23_STS",true);
+        }
 
         PictureClass stg1 = new PictureClass();
         stg1.get_assets("BGS/stage1.png",0,0,1280,720);
@@ -80,13 +88,12 @@ public class GameScreen implements Screen {
                 enemyTest.SHIELDS = 0;
                 enemyTest.enemy_move();
 
-                vergActor.ENERGY = Verg.MAX_ENERGY;
-                vergActor.SHIELDS = 0;
+                Verg.ENERGY = Verg.MAX_ENERGY;
+                Verg.SHIELDS = 0;
 
                 return true;
             }
         });
-        //resetButton.setPosition(1200,200);
         resetButton.setBounds(1060,120,100,100);
         stage.addActor(resetButton);
 
@@ -98,8 +105,8 @@ public class GameScreen implements Screen {
 
         remainingLabel = new Label("Remaining: " + deckGenerator.getRemainingCards(), skin);
         discardedLabel = new Label("Discarded: " + deckGenerator.getDiscardedCards(), skin);
-        hpLabel = new Label("HP: "+vergActor.HP+" / "+vergActor.MAX_HP, skin);
-        energyLabel = new Label("Energy: "+vergActor.ENERGY+" / "+vergActor.MAX_ENERGY,skin);
+        hpLabel = new Label("HP: "+Verg.HP+" / "+vergActor.MAX_HP, skin);
+        energyLabel = new Label("Energy: "+Verg.ENERGY+" / "+vergActor.MAX_ENERGY,skin);
 
         uiTable.add(hpLabel).pad(10);
         uiTable.add(energyLabel).pad(10);
@@ -113,6 +120,7 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("ESC");
+                dispose();
                 game.setScreen(new MainMenuScreen(game));
             }
         });
@@ -127,11 +135,11 @@ public class GameScreen implements Screen {
 
     private void createHand() {
         ArrayList<CardClass> hand;
-        if (deckGenerator.getRemainingCards() < 5) { // If there are fewer cards remaining than needed to fill hand
+        if (deckGenerator.getRemainingCards() < Verg.Drawable_cards) { // If there are fewer cards remaining than needed to fill hand
             deckGenerator.discardedBackToDeck(deckGenerator.discardPile); // Reshuffle discardPile back into deck
-            hand = deckGenerator.drawCards(5);
+            hand = deckGenerator.drawCards(Verg.Drawable_cards);
         } else {
-            hand = deckGenerator.drawCards(5);
+            hand = deckGenerator.drawCards(Verg.Drawable_cards);
         }
         for (CardClass card : hand) {
             card.setTargetActor(vergActor);
@@ -152,7 +160,9 @@ public class GameScreen implements Screen {
         createHand();
     }
     public void addToDiscardPile(CardClass card) {
-        deckGenerator.discardCard(card);
+        ArrayList<CardClass> currentHand = new ArrayList<>();
+        currentHand.add(card);
+        deckGenerator.returnCards(currentHand);
         updateLabels();
     }
 
@@ -169,15 +179,28 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(Color.DARK_GRAY);
 
         if (Verg.HP < 1){
+            LeviathanGame.global_deck = new ArrayList<>();
             game.setScreen(new MainMenuScreen(game)); // For restart
         }
         if (enemyActor.dead){
             if (LeviathanGame.boss_battle){
                 LeviathanGame.boss_battle = false;
                 LeviathanGame.current_level++;
-                game.setScreen(new RouteMapScreen(game)); // To go to level 2
+                if (LeviathanGame.current_level == 3){
+                    BG_Music.startMusic("01_STS",true);
+                    game.setScreen(new MainMenuScreen(game)); // Win, go back to menu
+                    LeviathanGame.current_level = 1;
+                    LeviathanGame.global_deck.clear();
+                    dispose();
+                }else {
+                    BG_Music.startMusic("02_STS",true);
+                    routeMapScreen.dispose();
+                    game.setScreen(new RouteMapScreen(game)); // To go to level 2
+                    dispose();
+                }
                 return;
             }
+            Verg.SHIELDS = 0;
             routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
             game.setScreen(routeMapScreen); // To return back to RouteMapScreen
             this.dispose();
@@ -212,6 +235,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        LeviathanGame.inputMultiplexer.removeProcessor(stage);
         stage.dispose();
     }
 }

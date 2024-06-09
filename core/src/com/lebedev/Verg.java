@@ -46,6 +46,8 @@ public class Verg extends Actor {
     public static int ENERGY = 3;
     public static int MAX_ENERGY = 3;
     public static int SHIELDS = 0;
+    public static int Drawable_cards = 5;
+    public static int strength = 0;
 
 
     public Verg(){
@@ -96,12 +98,18 @@ public class Verg extends Actor {
         }
     }
     public static void heal_HP(int amount) { // When you need to heal trough shields
+        if (amount>0){
+            System.out.println("\n-------\nHEAL");
+        }else {
+            System.out.println("\n-------\nDMG");
+        }
+        System.out.println("before: "+ HP+" / "+MAX_HP);
         HP += amount;
 
         if (HP > MAX_HP){
             HP = MAX_HP; //NO OVERHEALING!
         }
-
+        System.out.println("after: "+ HP+" / "+MAX_HP);
     }
 
     @Override
