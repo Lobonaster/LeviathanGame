@@ -50,6 +50,7 @@ public class MainMenuScreen implements Screen {
 
         menuButtons.defaults().padLeft(90).spaceTop(20).width(450).height(100);
         TextButton text_button1 = new TextButton("PLAY",skin);
+        if(LeviathanGame.started)text_button1.getLabel().setText("CONTINUE");
         menuButtons.add(text_button1).padTop(200);
         text_button1.getLabel().setAlignment(Align.left);
         text_button1.getLabelCell().padLeft(40);
@@ -70,12 +71,28 @@ public class MainMenuScreen implements Screen {
         text_button1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // For restart
-                Verg.HP = 40 ;
-                Verg.MAX_HP = 40;
-                Verg.MAX_ENERGY = 3;
-                game.setScreen(new RouteMapScreen(game));
-                dispose();
+                if(LeviathanGame.started) {
+                    // For restart
+                    if(PauseScreen.primeScreen == 1) {
+                        game.setScreen(PauseScreen.getPrimeScreen1());
+                        PauseScreen.getPrimeScreen1().updateUI();
+                        PauseScreen.getPrimeScreen1().resume();
+                    } else if (PauseScreen.primeScreen == 2) {
+                        game.setScreen(PauseScreen.getPrimeScreen2());
+                        PauseScreen.getPrimeScreen2().updateUiBar();
+                        PauseScreen.getPrimeScreen2().resume();
+                    }
+                    dispose();
+                }
+                else {
+                    // For restart
+                    Verg.HP = 40;
+                    Verg.MAX_HP = 40;
+                    Verg.MAX_ENERGY = 3;
+                    LeviathanGame.started = true;
+                    game.setScreen(new RouteMapScreen(game));
+                    dispose();
+                }
             }
         });
         text_button2.addListener(new ChangeListener() {

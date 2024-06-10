@@ -20,7 +20,7 @@ public class Verg extends Actor {
     private static final int VERG_HEIGHT = VERG_HEIGHT_PIXEL * 7;
     private static final float VERG_ANIMATION_SPEED = 0.5f;
     private static final float ROLL_SWITCH_TIME = 0.65f;
-    private static float verg_x  = 230;
+    private static float verg_x  = 300;
     private static float verg_y = 190;
     private static float rollTimer = 0;
     private static int roll = 2;
@@ -39,7 +39,11 @@ public class Verg extends Actor {
     private final int shield_width = 52;
     private final int shield_height = 52;
     private Label shieldLabel = new Label("22",new Skin(Gdx.files.internal("assets/skin2/uiskin.json")));
-
+    /***BUFFS & DEBUFFS (effects)***/
+    private final int effects_width = 36;
+    private final int effects_height = 36;
+    private Texture strength_texture = new Texture("assets/Pictures/Sprites/Effects/strength.png");
+    private Label effect_Label1 = new Label("1",new Skin(Gdx.files.internal("assets/skin2/uiskin.json")));
     /********STATS*********/
     public static int HP = 40;
     public static int MAX_HP = 40;
@@ -68,6 +72,8 @@ public class Verg extends Actor {
 
         shieldLabel.setPosition(verg_x - 84, verg_y-30);
         shieldLabel.setAlignment(center);
+        effect_Label1.setPosition(verg_x  - 42, verg_y-59);
+        effect_Label1.setAlignment(center);
     }
     public void rollSwitch(int plus_minus){ //prevents roll from going out of bounds, UNUSED for now
         roll += plus_minus;
@@ -133,6 +139,12 @@ public class Verg extends Actor {
                 shieldLabel.setText(SHIELDS);
             } else {
                 shieldLabel.remove();
+            }
+            /***EFFECTS***/
+            if (strength != 0 ){
+                batch.draw(strength_texture,verg_x - 40, verg_y-58, effects_width, effects_height);
+                effect_Label1.draw(batch,parentAlpha);
+                effect_Label1.setText(strength);
             }
             /***************/
             stateTime += Gdx.graphics.getDeltaTime();

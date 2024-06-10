@@ -1,6 +1,7 @@
 package com.lebedev.Enemies.floor1.elite;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.lebedev.SoundMaker;
 import com.lebedev.Verg;
 import com.lebedev.enemyTest;
 
@@ -17,7 +18,7 @@ public class el2 extends enemyTest {
     public static int patternLimit = 2;
 
 
-    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/enemyDEMO.png");
+    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/Enemies/enemy4.png");
 
     public static void init(){
         enemyTest.enemySprite = enemySprite;
@@ -43,6 +44,7 @@ public class el2 extends enemyTest {
                 break;
             case 2:
                 enemyTest.roll = 1;
+                SoundMaker.makeSound("bite");
                 Verg.manage_HP(-attack_damage - enemyTest.strength);
                 enemyTest.SHIELDS += enemyTest.strength;
                 moveType = 2;

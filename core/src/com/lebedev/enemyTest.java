@@ -20,7 +20,7 @@ public class enemyTest extends Actor{
     private static final int ENEMY_HEIGHT = ENEMY_HEIGHT_PIXEL * 7;
     private static final float ENEMY_ANIMATION_SPEED = 0.5f;
     private static final float ROLL_SWITCH_TIME = 0.65f;
-    private static float enemy_x  = 830;
+    private static float enemy_x  = 870;
     private static float enemy_y = 190;
     private static float rollTimer = 0;
     public static int roll = 2;

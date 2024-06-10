@@ -90,11 +90,6 @@ public class EnemyMaker {
                             en3_2.init();
                             enemyTest.dead = false;
                             break;
-                        case (3):
-                            current_enemy = "en4_2";
-                            en3.init();
-                            enemyTest.dead = false;
-                            break;
                     }
                     break;
                 case "elite":
@@ -108,11 +103,6 @@ public class EnemyMaker {
                         case (1):
                             current_enemy = "el2_2";
                             el2_2.init();
-                            enemyTest.dead = false;
-                            break;
-                        case (2):
-                            current_enemy = "el3_2";
-                            en3.init();
                             enemyTest.dead = false;
                             break;
                     }

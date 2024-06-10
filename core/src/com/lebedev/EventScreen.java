@@ -27,6 +27,7 @@ public class EventScreen implements Screen {
     private int buttonIndex;
     private Label hpLabel = new Label("",skin);
     private Label textLabel = new Label("",skin);
+    private Label remainingLabel = new Label("",skin);
     private DeckGenerator deckGenerator;
     Verg vergActor = new Verg();
     enemyTest enemyActor = new enemyTest();
@@ -53,7 +54,8 @@ public class EventScreen implements Screen {
         stage.addActor(bg1);
 
         PictureClass ui_bar = new PictureClass();
-        ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+LeviathanGame.flag, 1280,80);
+        ui_bar.get_assets("Menus/Ui_Bar.png", 0,
+                (int) extendViewport.getMinWorldHeight()-80+LeviathanGame.flag, 1280,80);
         stage.addActor(ui_bar);
 
         PictureClass bg = new PictureClass();
@@ -77,7 +79,7 @@ public class EventScreen implements Screen {
          * WHERE:
          * 0 - Plus 8 MAX and HP / Get a strong strike card
          * 1 - Increase DrawCard and decrease 10 HP / Increase MaxEnergy and heavily decrease HP and 18 MaxHp / Skip
-         * 2 - Start next battle with 30 shields and 10 HP / get 1 strength and 7 DMG / get 14 MaxHP and curse
+         * 2 - Heal 10HP and get defence card/ get 1 strength and 7 DMG/ get 14 MaxHP and curse
          */
         PictureClass pic = new PictureClass();
 
@@ -99,7 +101,7 @@ public class EventScreen implements Screen {
                 choice2.getLabel().setColor(Color.GREEN);
                 break;
             case 1:
-                pic.get_assets("Buttons/brick.png", 55, 70, 460,460);
+                pic.get_assets("Buttons/girya.png", 55, 70, 460,460);
                 textLabel = new Label("Momentary opportunity",skin);
                 choice1.setText("Increase DrawCard and decrease 10 HP");
                 choice1.getLabel().setColor(Color.ORANGE);
@@ -109,9 +111,9 @@ public class EventScreen implements Screen {
                 choice3.getLabel().setColor(Color.WHITE);
                 break;
             case 2:
-                pic.get_assets("Buttons/exit.png", 55, 70, 460,460);
+                pic.get_assets("Buttons/torture.png", 55, 70, 460,460);
                 textLabel = new Label("Slight relief",skin);
-                choice1.setText("Start next battle with 30 shields and heal 10 HP");
+                choice1.setText("Heal 10HP and get strong defence card");
                 choice1.getLabel().setColor(Color.GREEN);
                 choice2.setText("Get 1 strength and 7 DMG");
                 choice2.getLabel().setColor(Color.ORANGE);
@@ -126,8 +128,16 @@ public class EventScreen implements Screen {
         hpLabel.setAlignment(Align.center);
         hpLabel.setWrap(false);
         hpLabel.setFontScale(1.5f);
-        hpLabel.setBounds(100,650+flag*2,200,60);
+        hpLabel.setBounds(100,650+flag*2,180,60);
         stage.addActor(hpLabel);
+
+        int result = 10 + DeckGenerator.global_deck.size();
+        remainingLabel = new Label("Deck: "+result+" Cards", skin);
+        remainingLabel.setAlignment(Align.center);
+        remainingLabel.setWrap(false);
+        remainingLabel.setFontScale(1.5f);
+        remainingLabel.setBounds(300,650+flag*2,180,60);
+        stage.addActor(remainingLabel);
 
 
         textLabel.setAlignment(Align.center);
@@ -181,8 +191,8 @@ public class EventScreen implements Screen {
                         Verg.manage_HP(-8);
                         break;
                     case 2:
-                        Verg.SHIELDS += 30;
-                        Verg.heal_HP(10);
+                        Verg.HP += 10;
+                        deckGenerator.addCard("defend");
                         break;
                 }
                 routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
@@ -211,7 +221,7 @@ public class EventScreen implements Screen {
                 }
 
                 if (Verg.HP < 1){
-                    LeviathanGame.global_deck = new ArrayList<>(); //clear new cards deck
+                    DeckGenerator.global_deck = new ArrayList<>(); //clear new cards deck
                     game.setScreen(new MainMenuScreen(game)); // For restart
                     return;
                 }
@@ -222,13 +232,6 @@ public class EventScreen implements Screen {
             }
         });
 
-        /**
-         * deciding event type based on randomness
-         * WHERE:
-         * 0 - Plus 8 MAX and HP / Get a strong strike card
-         * 1 - Increase DrawCard and decrease 10 HP / Increase MaxEnergy and heavily decrease HP and 18 MaxHp / Skip
-         * 2 - Start next battle with 30 shields and heal 10 HP / get 1 strength and 7 DMG / get 14 MaxHP and curse
-         */
         choice3.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

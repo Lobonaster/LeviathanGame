@@ -1,6 +1,7 @@
 package com.lebedev.Enemies.floor1.boss;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.lebedev.SoundMaker;
 import com.lebedev.Verg;
 import com.lebedev.enemyTest;
 
@@ -40,7 +41,7 @@ public class b1 extends enemyTest {
                 moveType = 2;
                 break;
             case 2:
-                enemyTest.HP -= 82;
+                enemyTest.HP -= 80;
                 if (enemyTest.HP > enemyTest.MAX_HP){
                     enemyTest.HP = enemyTest.MAX_HP;
                 }
@@ -48,6 +49,7 @@ public class b1 extends enemyTest {
                 moveType = 1;
                 break;
             case 3:
+                SoundMaker.makeSound("swordSnd");
                 enemyTest.roll = 1;
                 Verg.manage_HP(-10-enemyTest.strength);
                 moveType = 2;

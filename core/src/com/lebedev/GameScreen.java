@@ -32,6 +32,10 @@ public class GameScreen implements Screen {
     private RouteMapScreen routeMapScreen;
     private final int pathIndex;
     private final int buttonIndex;
+
+    private static RouteMapScreen routeMapScreenPH;
+    private static EventScreen eventScreenPH;
+
     enemyTest enemyActor = new enemyTest();
 
     public GameScreen(LeviathanGame game,RouteMapScreen routeMapScreen, int pathIndex, int buttonIndex){
@@ -60,6 +64,7 @@ public class GameScreen implements Screen {
         PictureClass ui_bar = new PictureClass();
         ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+LeviathanGame.flag*2, 1290,80);
         stage.addActor(ui_bar);
+        ui_bar.setZIndex(2);
 
         stage.addActor(vergActor);
 
@@ -94,7 +99,7 @@ public class GameScreen implements Screen {
                 return true;
             }
         });
-        resetButton.setBounds(1060,120,100,100);
+        resetButton.setBounds(1100,80,120,120);
         stage.addActor(resetButton);
 
 
@@ -113,15 +118,20 @@ public class GameScreen implements Screen {
         uiTable.add(remainingLabel).pad(10);
         uiTable.add(discardedLabel).pad(10);
 
-        TextButton return_button = new TextButton("ESC",skin);
+        TextButton return_button = new TextButton("pause",skin);
         uiTable.add(return_button.pad(10)).right();
 
         return_button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("ESC");
-                dispose();
-                game.setScreen(new MainMenuScreen(game));
+                System.out.println("pause");
+
+                LeviathanGame.inputMultiplexer.removeProcessor(stage);
+
+                ui_bar.remove();
+
+                game.setScreen(new PauseScreen(game,GameScreen.this,routeMapScreenPH,eventScreenPH,1));
+                updateUI();
             }
         });
 
@@ -172,6 +182,14 @@ public class GameScreen implements Screen {
         hpLabel.setText("HP: "+vergActor.HP+" / "+vergActor.MAX_HP);
         energyLabel.setText("Energy: "+vergActor.ENERGY+" / "+vergActor.MAX_ENERGY);
     }
+    public void updateUI() {
+        PictureClass ui_bar = new PictureClass();
+        ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+LeviathanGame.flag*2, 1290,80);
+        stage.addActor(ui_bar);
+        ui_bar.setZIndex(2);
+        routeMapScreen.updateBG();
+        routeMapScreen.updateUiBar();
+    }
 
     @Override
     public void render(float delta) {
@@ -179,7 +197,9 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(Color.DARK_GRAY);
 
         if (Verg.HP < 1){
-            LeviathanGame.global_deck = new ArrayList<>();
+            LeviathanGame.inputMultiplexer.removeProcessor(stage);
+            DeckGenerator.global_deck = new ArrayList<>();
+            LeviathanGame.started = false;
             game.setScreen(new MainMenuScreen(game)); // For restart
         }
         if (enemyActor.dead){
@@ -190,6 +210,7 @@ public class GameScreen implements Screen {
                     BG_Music.startMusic("01_STS",true);
                     game.setScreen(new MainMenuScreen(game)); // Win, go back to menu
                     LeviathanGame.current_level = 1;
+                    LeviathanGame.started = false;
                     LeviathanGame.global_deck.clear();
                     dispose();
                 }else {
@@ -220,12 +241,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
+        LeviathanGame.inputMultiplexer.removeProcessor(stage);
     }
 
     @Override
     public void resume() {
-
+        LeviathanGame.inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.lebedev.Enemies.floor1.regular;
 
 
 import com.badlogic.gdx.graphics.Texture;
+import com.lebedev.SoundMaker;
 import com.lebedev.Verg;
 import com.lebedev.enemyTest;
 
@@ -18,7 +19,7 @@ public class en2 extends enemyTest {
     public static int patternLimit = 2;
 
 
-    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/DEMO.png");
+    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/Enemies/enemy2.png");
 
     public static void init(){
         enemyTest.enemySprite = enemySprite;
@@ -34,6 +35,7 @@ public class en2 extends enemyTest {
         // 1: attack, 2: buff, 3: shield
         switch (pattern) {
             case 1:
+                SoundMaker.makeSound("swordSnd");
                 enemyTest.roll = 1;
                 Verg.manage_HP(-attack_damage - enemyTest.strength);
                 moveType = 2;

@@ -5,7 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
 public class BG_Music extends ApplicationAdapter {
-    static Music music;
+    private static Music music;
+    public static float volume = 0.3f;
     public static void startMusic(String filename, boolean stop_previous) {
         if (stop_previous) {
             System.out.println("done");
@@ -13,8 +14,12 @@ public class BG_Music extends ApplicationAdapter {
         }
         music = Gdx.audio.newMusic(Gdx.files.internal("assets/Audio/"+filename+".mp3"));
         music.setLooping(true);
-        music.setVolume(0.2f);
+        music.setVolume(volume);
         music.play();
+    }
+    public static void volumeChange(float newVolume) {
+        volume = newVolume;
+        music.setVolume(volume);
     }
     /**
     @Override

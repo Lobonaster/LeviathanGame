@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
+import static com.lebedev.LeviathanGame.flag;
+
 public class Settings_Screen implements Screen {
     LeviathanGame game;
     private Stage stage;
@@ -20,13 +22,13 @@ public class Settings_Screen implements Screen {
 
     public Settings_Screen(LeviathanGame game){
         this.game = game;
-        BG_Music.startMusic("02_STS",true);
+
         bg_stage = new Stage(new FillViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()));
         PictureClass mainMenu = new PictureClass();
         mainMenu.get_assets("Menus/Main/LeviathanMenuBG.png",0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         bg_stage.addActor(mainMenu);
 
-        stage = new Stage(new ExtendViewport(1280,720)); // For UI
+        stage = new Stage(new ExtendViewport(1280,720+flag)); // For UI
 
         LeviathanGame.inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer);
@@ -35,7 +37,7 @@ public class Settings_Screen implements Screen {
         root.setFillParent(true);
 
         PictureClass settings2 = new PictureClass();
-        settings2.get_assets("Menus/Settings/SettingsLOGO.png",80,474,474,108);
+        settings2.get_assets("Menus/Settings/SettingsLOGO.png",80,474+flag,474,108);
         stage.addActor(settings2);
 
         stage.addActor(root);
@@ -75,11 +77,20 @@ public class Settings_Screen implements Screen {
 
         root.add(menuButtons).expandY().expandX().left();
 
-        menuButtons.defaults().padLeft(90).spaceTop(20).width(450).height(100);
+
+        Label remainingLabel = new Label("BGM Volume: " +String.valueOf(LeviathanGame.volumePercent), skin);
+        remainingLabel.setBounds(0,0,50,30);
+
+        Slider volumeSlider = new Slider(0, 1, 0.01f, false, skin);
+        volumeSlider.setVisualPercent((float) LeviathanGame.volumePercent /100);
+        menuButtons.add(remainingLabel).padTop(200).padLeft(40);
+        menuButtons.add(volumeSlider).padTop(200).padLeft(0).width(300).height(30);
+
+        menuButtons.defaults().padLeft(90).spaceTop(20).width(450).height(80);
 
         menuButtons.row();
         Button toggle_button = new Button(skin,"toggle");
-        menuButtons.add(toggle_button).padTop(200).colspan(2);
+        menuButtons.add(toggle_button).colspan(2);
         Label label = new Label("FULLSCREEN",skin);
         toggle_button.add(label).expandX().left().padLeft(40);
 
@@ -92,7 +103,7 @@ public class Settings_Screen implements Screen {
         apply_button.getLabel().setAlignment(Align.left);
         apply_button.getLabelCell().padLeft(40);
 
-        menuButtons.add(selectBox).width(260).height(100).padLeft(20);
+        menuButtons.add(selectBox).width(260).height(80).padLeft(20);
 
         menuButtons.row();
         TextButton return_button = new TextButton("RETURN",skin);
@@ -105,6 +116,16 @@ public class Settings_Screen implements Screen {
             selectBox.setDisabled(true);
         }
 
+        volumeSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float volume = volumeSlider.getValue();
+                BG_Music.volumeChange(volume);
+                LeviathanGame.volumePercent = (int) (volume * 100);
+                remainingLabel.setText("BGM Volume: "+String.valueOf(LeviathanGame.volumePercent));
+            }
+        });
+
         toggle_button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -116,9 +137,9 @@ public class Settings_Screen implements Screen {
                     apply_button.setDisabled(true);
                     selectBox.setDisabled(true);
                     if (Gdx.graphics.getHeight()%100 == 0){
-                        LeviathanGame.flag = 40;
+                        flag = 40;
                     }else {
-                        LeviathanGame.flag = 0;
+                        flag = 0;
                     }
                 } else {
                     System.out.println("Windowed");
@@ -128,9 +149,9 @@ public class Settings_Screen implements Screen {
                     apply_button.setDisabled(false);
                     selectBox.setDisabled(false);
                     if (Gdx.graphics.getHeight()%100 == 0){
-                        LeviathanGame.flag = 40;
+                        flag = 40;
                     }else {
-                        LeviathanGame.flag = 0;
+                        flag = 0;
                     }
                 }
             }
@@ -141,9 +162,11 @@ public class Settings_Screen implements Screen {
                 System.out.println(LeviathanGame.res_width +"x"+ LeviathanGame.res_height);
                 Gdx.graphics.setWindowedMode(LeviathanGame.res_width,LeviathanGame.res_height);
                 if (Gdx.graphics.getHeight()%100 == 0){
-                    LeviathanGame.flag = 40;
+                    flag = 40;
+                    dispose();
+                    game.setScreen(new Settings_Screen(game));
                 }else {
-                    LeviathanGame.flag = 0;
+                    flag = 0;
                 }
             }
         });
@@ -151,7 +174,6 @@ public class Settings_Screen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("RETURN");
-                BG_Music.startMusic("01_STS",true);
                 game.setScreen(new MainMenuScreen(game));
                 dispose();
             }

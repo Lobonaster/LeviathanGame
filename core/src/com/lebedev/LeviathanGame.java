@@ -17,10 +17,12 @@ public class LeviathanGame extends Game {
 	public static String res_choice = "1280x720";
 	public static int res_width = 1280; // chosen resolution width
 	public static int res_height = 720; // chosen resolution height
+	public static int volumePercent = 30;
 
 	public static ArrayList<CardClass> global_deck = new ArrayList<>();
 	public static int current_level = 1;
-	public static Boolean boss_battle = false;
+	public static boolean boss_battle = false;
+	public static boolean started = false;
 
 	public static InputMultiplexer inputMultiplexer;
 	static Music music;

@@ -18,7 +18,7 @@ public class en2_2 extends enemyTest {
     public static int patternLimit = 2;
 
 
-    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/DEMO.png");
+    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/Enemies/enemy2.png");
 
     public static void init(){
         enemyTest.enemySprite = enemySprite;

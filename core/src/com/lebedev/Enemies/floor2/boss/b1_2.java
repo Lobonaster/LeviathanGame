@@ -1,6 +1,7 @@
 package com.lebedev.Enemies.floor2.boss;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.lebedev.SoundMaker;
 import com.lebedev.Verg;
 import com.lebedev.enemyTest;
 
@@ -35,12 +36,14 @@ public class b1_2 extends enemyTest {
         if (enemyTest.HP >= 200){
             switch (pattern) {
                 case 1:
+                    SoundMaker.makeSound("swordSnd");
                     enemyTest.roll = 1;
                     Verg.manage_HP(-10-enemyTest.strength);
                     enemyTest.attack_damage = 16;
                     moveType = 1;
                     break;
                 case 2:
+                    SoundMaker.makeSound("swordSnd");
                     enemyTest.roll = 1;
                     Verg.manage_HP(-16-enemyTest.strength);
                     enemyTest.attack_damage = 10;
@@ -59,12 +62,14 @@ public class b1_2 extends enemyTest {
             if(!trigger){ // one time phase 2 activation
                 switch (pattern) {
                     case 1:
+                        SoundMaker.makeSound("bash");
                         enemyTest.roll = 1;
                         Verg.manage_HP(-26 - enemyTest.strength);
                         enemyTest.attack_damage = 13;
                         moveType = 1;
                         break;
                     case 2:
+                        SoundMaker.makeSound("bash");
                         enemyTest.roll = 1;
                         Verg.manage_HP(-13 - enemyTest.strength);
                         enemyTest.attack_damage = 26;

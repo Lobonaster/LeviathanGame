@@ -30,8 +30,14 @@ public class RouteMapScreen implements Screen {
     private final Skin skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json"));
     private Label hpLabel = new Label("",skin);
     private Label remainingLabel = new Label("",skin);
+    TextButton return_button = new TextButton("Pause",skin);
+    private PictureClass ui_bar = new PictureClass();
+    PictureClass bg = new PictureClass();
 
     TextButton boss_button;
+
+    private static EventScreen eventScreenPH;
+    private static GameScreen gameScreenPH;
 
     public RouteMapScreen(LeviathanGame game) {
         this.game = game;
@@ -41,16 +47,21 @@ public class RouteMapScreen implements Screen {
         LeviathanGame.inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer); // to regain focus
 
+
+        bg.get_assets("BGS/stage1.png",0,0,1280,640+flag*2);
+        stage.addActor(bg);
+
         PictureClass background = new PictureClass();
         background.get_assets("BGS/map_background.png",390,0,500,1500);
         stage.addActor(background);
 
-        PictureClass ui_bar = new PictureClass();
+
         ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+ flag, 1280,80);
 
         pathCompletion = new boolean[3][14]; // 3 paths, each with 14 steps
         initializePaths();
         stage.addActor(ui_bar);
+        ui_bar.setZIndex(3);
         hpLabel = new Label("HP: "+Verg.HP+" / "+Verg.MAX_HP, skin);
         hpLabel.setAlignment(Align.center);
         hpLabel.setWrap(false);
@@ -58,23 +69,28 @@ public class RouteMapScreen implements Screen {
         hpLabel.setBounds(100,650+flag*2,180,60);
         stage.addActor(hpLabel);
 
-        remainingLabel = new Label("Remaining: X" , skin);
+        int result = 10 + DeckGenerator.global_deck.size();
+        remainingLabel = new Label("Deck: "+result+" Cards", skin);
         remainingLabel.setAlignment(Align.center);
         remainingLabel.setWrap(false);
         remainingLabel.setFontScale(1.5f);
         remainingLabel.setBounds(300,650+flag*2,180,60);
         stage.addActor(remainingLabel);
 
-        TextButton return_button = new TextButton("ESC",skin);
-        return_button.setPosition(1215,(int) extendViewport.getMinWorldHeight()-65+ flag);
-        return_button.setSize(50, 50);
+        return_button.setPosition(1205,(int) extendViewport.getMinWorldHeight()-65+ flag);
+        return_button.setSize(60, 50);
         stage.addActor(return_button);
 
         return_button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("ESC");
-                game.setScreen(new MainMenuScreen(game));
+                System.out.println("pause");
+                LeviathanGame.inputMultiplexer.removeProcessor(stage);
+
+                ui_bar.remove();
+
+                game.setScreen(new PauseScreen(game,gameScreenPH,RouteMapScreen.this,eventScreenPH,2));
+                updateUiBar();
             }
         });
 
@@ -141,6 +157,8 @@ public class RouteMapScreen implements Screen {
         Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer); // to regain focus
 
         hpLabel.setText("HP: "+Verg.HP+" / "+Verg.MAX_HP);
+        int result = 10 + DeckGenerator.global_deck.size();
+        remainingLabel.setText("Deck: "+result+" Cards");
         pathCompletion[pathIndex][buttonIndex] = true;
         if (buttonIndex < pathCompletion[pathIndex].length - 1) {
             TextButton previousButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex);
@@ -238,6 +256,24 @@ public class RouteMapScreen implements Screen {
         }
     }
 
+    public void updateUiBar(){
+        ui_bar.remove();
+        ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+ flag, 1280,80);
+        stage.addActor(ui_bar);
+        ui_bar.setZIndex(3);
+        extendViewport = new ExtendViewport(1280,720+flag);
+        remainingLabel.setBounds(300,650+flag*2,180,60);
+        hpLabel.setBounds(100,650+flag*2,180,60);
+        return_button.setPosition(1205,(int) extendViewport.getMinWorldHeight()-65+ flag);
+    }
+    public void updateBG(){
+        bg.remove();;
+        bg.get_assets("BGS/stage1.png",0,0,1280,640+flag*2);
+        stage.addActor(bg);
+        bg.setZIndex(0);
+        extendViewport = new ExtendViewport(1280,720+flag);
+    }
+
     @Override
     public void show() {
         // nothing to do here
@@ -246,7 +282,8 @@ public class RouteMapScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        ScreenUtils.clear(Color.DARK_GRAY);
+
+        updateUiBar();
 
         stage.draw();
         //stage.getBatch().disableBlending(); // only solution to stop ui disappear
@@ -266,7 +303,8 @@ public class RouteMapScreen implements Screen {
 
     @Override
     public void resume() {
-
+        LeviathanGame.inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(LeviathanGame.inputMultiplexer);
     }
 
     @Override

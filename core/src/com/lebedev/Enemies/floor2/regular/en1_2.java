@@ -18,7 +18,7 @@ public class en1_2 extends enemyTest {
 
 
 
-    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/enemyDEMO.png");
+    public static Texture enemySprite = new Texture("assets/Pictures/Sprites/Enemies/enemy1.png");
 
     public static void init(){
         enemyTest.enemySprite = enemySprite;

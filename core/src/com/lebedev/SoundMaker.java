@@ -18,14 +18,19 @@ public class SoundMaker extends ApplicationAdapter {
                 id = sound.play(0.4f, 1.3f, 0f);
                 soundLen = 1.36f;
                 break;
-            case "click":
+            case "bash":
                 id = sound.play(1f, 1f, 0f);
-                soundLen = 0.21f;
+                soundLen = 1f;
+                break;
+            case "bite":
+                id = sound.play(1f, 1f, 0f);
+                soundLen = 0.6f;
                 break;
         }
         Timer.schedule(new Timer.Task() {
            @Override
            public void run() {
+               System.out.println("disposed");
                sound.dispose();
            }
         },soundLen);
