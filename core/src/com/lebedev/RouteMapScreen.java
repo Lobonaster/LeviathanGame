@@ -94,7 +94,7 @@ public class RouteMapScreen implements Screen {
             }
         });
 
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
     }
 
     private void initializePaths() {
@@ -108,10 +108,12 @@ public class RouteMapScreen implements Screen {
                 final int pathIndex = i;
                 final int buttonIndex = j;
                 final int random_button_type;
-                if(j>0) {
+                if(j>0&& j<13) {
                     final Random buttonRandom = new Random();
-                    random_button_type = buttonRandom.nextInt(101); //!!!!!!!!!!! 3
-                }else {
+                    random_button_type = buttonRandom.nextInt(101);
+                } else if (j == 13) {
+                    random_button_type = 99; //last room always event
+                } else {
                     random_button_type = 0; //first room always enemy
                 }
 
@@ -197,7 +199,7 @@ public class RouteMapScreen implements Screen {
         }
         switch (button_type){
             case 0:
-                button = new TextButton("Enemy"+"F"+LeviathanGame.current_level, skin);
+                button = new TextButton("Enemy", skin);
                 button.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
@@ -212,7 +214,7 @@ public class RouteMapScreen implements Screen {
                 });
                 break;
             case 1:
-                button = new TextButton("Elite"+"F"+LeviathanGame.current_level, skin);
+                button = new TextButton("Elite", skin);
                 button.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
@@ -227,7 +229,7 @@ public class RouteMapScreen implements Screen {
                 });
                 break;
             case 2:
-                button = new TextButton("Event"+"F"+LeviathanGame.current_level, skin);
+                button = new TextButton("Event", skin);
                 button.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {

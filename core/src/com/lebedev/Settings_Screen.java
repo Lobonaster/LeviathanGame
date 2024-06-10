@@ -83,8 +83,8 @@ public class Settings_Screen implements Screen {
 
         Slider volumeSlider = new Slider(0, 1, 0.01f, false, skin);
         volumeSlider.setVisualPercent((float) LeviathanGame.volumePercent /100);
-        menuButtons.add(remainingLabel).padTop(200).padLeft(40);
-        menuButtons.add(volumeSlider).padTop(200).padLeft(0).width(300).height(30);
+        menuButtons.add(remainingLabel).padTop(200).padLeft(60);
+        menuButtons.add(volumeSlider).padTop(200).padLeft(0).width(290).height(30);
 
         menuButtons.defaults().padLeft(90).spaceTop(20).width(450).height(80);
 
@@ -99,7 +99,7 @@ public class Settings_Screen implements Screen {
         menuButtons.row();
 
         TextButton apply_button = new TextButton("APPLY",skin);
-        menuButtons.add(apply_button).width(170);
+        menuButtons.add(apply_button).width(140);
         apply_button.getLabel().setAlignment(Align.left);
         apply_button.getLabelCell().padLeft(40);
 
@@ -179,7 +179,7 @@ public class Settings_Screen implements Screen {
             }
         });
 
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
     }
 
     @Override

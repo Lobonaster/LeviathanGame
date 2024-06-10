@@ -60,13 +60,12 @@ public class PauseScreen implements Screen {
         resetButton.getLabel().setAlignment(Align.center);
         resetButton.setBounds(550,330,180,50);;
         stage.addActor(resetButton);
-        stage.setDebugAll(true);
 
         TextButton backButton = new TextButton("Main menu",skin);
         backButton.getLabel().setAlignment(Align.center);
         backButton.setBounds(550,260,180,50);;
         stage.addActor(backButton);
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
 
         switch (primeScreen) {
             case 1:

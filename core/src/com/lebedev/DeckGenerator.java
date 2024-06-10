@@ -45,11 +45,11 @@ public class DeckGenerator {
         }
         for (int i = 0; i < 5; i++) {
             deck.add(new CardClass(strikeTexture, targetActor,targetEnemy, gameScreen,
-                    -68-Verg.strength,1,"atck","swordSnd"));
+                    -6-Verg.strength,1,"atck","swordSnd"));
 
         }
         deck.add(new CardClass(bashTexture, targetActor,targetEnemy,gameScreen,
-                -16-Verg.strength,2,"atck","bash"));
+                -14-Verg.strength,2,"atck","bash"));
         deck.addAll(global_deck);
     }
 
@@ -89,12 +89,6 @@ public class DeckGenerator {
             case "defend":
                 global_deck.add(new CardClass(greatDefTexture, targetActor, targetEnemy,
                         gameScreen, 16, 2, "skill","click"));
-                System.out.println("added def card");
-                break;
-            case "strike":
-                global_deck.add(new CardClass(strikeTexture, targetActor, targetEnemy,
-                        gameScreen, -6-Verg.strength, 1, "atck","swordSnd"));
-                System.out.println("added strike card");
                 break;
             case "bash":
                 global_deck.add(new CardClass(bashTexture, targetActor,targetEnemy,

@@ -164,7 +164,6 @@ public class EventScreen implements Screen {
         choice1.getLabelCell().padRight(40);
 
         menuButtons.row();
-;
         menuButtons.add(choice2);
         choice2.getLabel().setAlignment(Align.left);
         choice2.getLabelCell().padRight(40);
@@ -261,7 +260,7 @@ public class EventScreen implements Screen {
 
 
         stage.addActor(root);
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
 
     }
 

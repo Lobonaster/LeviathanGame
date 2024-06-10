@@ -43,7 +43,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(mainMenu3);
 
         stage.addActor(root);
-        skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json")); //TODO: Temporary change to basic uiskin
+        skin = new Skin(Gdx.files.internal("assets/skin2/uiskin.json"));
 
         Table menuButtons = new Table(skin);
         root.add(menuButtons).expandY().expandX().left();
@@ -72,7 +72,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(LeviathanGame.started) {
-                    // For restart
+                    // For continue
                     if(PauseScreen.primeScreen == 1) {
                         game.setScreen(PauseScreen.getPrimeScreen1());
                         PauseScreen.getPrimeScreen1().updateUI();

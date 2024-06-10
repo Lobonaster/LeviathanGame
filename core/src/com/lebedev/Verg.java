@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import static com.badlogic.gdx.utils.Align.center;
 
 public class Verg extends Actor {
-    // TODO: 14.05.2024 still needs polishing
     /********BASIC*********/
     private static final int VERG_WIDTH_PIXEL = 17;
     private static final int VERG_HEIGHT_PIXEL = 32;
@@ -75,14 +74,7 @@ public class Verg extends Actor {
         effect_Label1.setPosition(verg_x  - 42, verg_y-59);
         effect_Label1.setAlignment(center);
     }
-    public void rollSwitch(int plus_minus){ //prevents roll from going out of bounds, UNUSED for now
-        roll += plus_minus;
-        if (roll < 0 ){
-            roll = 0;
-        } else if (roll > 4) {
-            roll = 4;
-        }
-    }
+
     public void perform_attack(){
         roll = 1 ;
     }

@@ -135,7 +135,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
     }
 
     @Override
