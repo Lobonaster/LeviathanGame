@@ -44,13 +44,13 @@ public class Verg extends Actor {
     private Texture strength_texture = new Texture("assets/Pictures/Sprites/Effects/strength.png");
     private Label effect_Label1 = new Label("1",new Skin(Gdx.files.internal("assets/skin2/uiskin.json")));
     /********STATS*********/
-    public static int HP = 40;
-    public static int MAX_HP = 40;
+    public static int HP = 60;
+    public static int MAX_HP = 60;
     public static int ENERGY = 3;
     public static int MAX_ENERGY = 3;
     public static int SHIELDS = 0;
     public static int Drawable_cards = 5;
-    public static int strength = 0;
+    public static int strength = 2;
 
 
     public Verg(){

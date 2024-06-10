@@ -259,21 +259,21 @@ public class RouteMapScreen implements Screen {
     }
 
     public void updateUiBar(){
-        ui_bar.remove();
-        ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+ flag, 1280,80);
-        stage.addActor(ui_bar);
-        ui_bar.setZIndex(3);
-        extendViewport = new ExtendViewport(1280,720+flag);
-        remainingLabel.setBounds(300,650+flag*2,180,60);
-        hpLabel.setBounds(100,650+flag*2,180,60);
-        return_button.setPosition(1205,(int) extendViewport.getMinWorldHeight()-65+ flag);
+        //ui_bar.remove();
+        //ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+ flag, 1280,80);
+        //stage.addActor(ui_bar);
+        //ui_bar.setZIndex(3);
+        //extendViewport = new ExtendViewport(1280,720+flag);
+        //remainingLabel.setBounds(300,650+flag*2,180,60);
+        //hpLabel.setBounds(100,650+flag*2,180,60);
+        //return_button.setPosition(1205,(int) extendViewport.getMinWorldHeight()-65+ flag);
     }
     public void updateBG(){
-        bg.remove();;
-        bg.get_assets("BGS/stage1.png",0,0,1280,640+flag*2);
-        stage.addActor(bg);
-        bg.setZIndex(0);
-        extendViewport = new ExtendViewport(1280,720+flag);
+        //bg.remove();;
+        //bg.get_assets("BGS/stage1.png",0,0,1280,640+flag*2);
+        //stage.addActor(bg);
+        //bg.setZIndex(0);
+        //extendViewport = new ExtendViewport(1280,720+flag);
     }
 
     @Override

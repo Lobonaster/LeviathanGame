@@ -199,7 +199,13 @@ public class GameScreen implements Screen {
         if (Verg.HP < 1){
             LeviathanGame.inputMultiplexer.removeProcessor(stage);
             DeckGenerator.global_deck = new ArrayList<>();
+            LeviathanGame.current_level = 1;
             LeviathanGame.started = false;
+            LeviathanGame.boss_battle = false;
+            Verg.strength = 2;
+            routeMapScreen.dispose();
+            BG_Music.startMusic("01_STS",true);
+            dispose();
             game.setScreen(new MainMenuScreen(game)); // For restart
         }
         if (enemyActor.dead){
@@ -211,11 +217,14 @@ public class GameScreen implements Screen {
                     game.setScreen(new MainMenuScreen(game)); // Win, go back to menu
                     LeviathanGame.current_level = 1;
                     LeviathanGame.started = false;
+                    routeMapScreen.dispose();
+                    Verg.strength = 2;
                     LeviathanGame.global_deck.clear();
                     dispose();
                 }else {
                     BG_Music.startMusic("02_STS",true);
                     routeMapScreen.dispose();
+                    Verg.HP = Verg.MAX_HP;
                     game.setScreen(new RouteMapScreen(game)); // To go to level 2
                     dispose();
                 }
@@ -257,6 +266,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        skin.dispose();
+        enemyTest.HP = 0;
+        enemyTest.strength = 0;
+        enemyTest.roll = 2;
+        System.out.println("GmS disposed");
         LeviathanGame.inputMultiplexer.removeProcessor(stage);
         stage.dispose();
     }

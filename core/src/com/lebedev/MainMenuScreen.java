@@ -85,9 +85,9 @@ public class MainMenuScreen implements Screen {
                     dispose();
                 }
                 else {
-                    // For restart
-                    Verg.HP = 40;
-                    Verg.MAX_HP = 40;
+                    // For restart and first start
+                    Verg.HP = 60;
+                    Verg.MAX_HP = 60;
                     Verg.MAX_ENERGY = 3;
                     LeviathanGame.started = true;
                     game.setScreen(new RouteMapScreen(game));
