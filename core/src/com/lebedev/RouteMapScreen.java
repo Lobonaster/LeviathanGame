@@ -69,8 +69,9 @@ public class RouteMapScreen implements Screen {
         hpLabel.setBounds(100,650+flag*2,180,60);
         stage.addActor(hpLabel);
 
-        int result = 10 + DeckGenerator.global_deck.size();
-        remainingLabel = new Label("Deck: "+result+" Cards", skin);
+        int result =  DeckGenerator.getdecksize();
+        remainingLabel = new Label("Deck: "+result+" Cards", skin); //TODO: FIX THIS
+
         remainingLabel.setAlignment(Align.center);
         remainingLabel.setWrap(false);
         remainingLabel.setFontScale(1.5f);
@@ -146,7 +147,6 @@ public class RouteMapScreen implements Screen {
                 changeColor(boss_button);
                 pathTable.add(boss_button).width(80).height(60).padTop(23).padRight(20).padLeft(20).row();
             }
-
             pathsTable.add(pathTable).top().padRight(30).padLeft(30).padBottom(400);
         }
         ScrollPane scrollPane = new ScrollPane(pathsTable);
@@ -259,14 +259,14 @@ public class RouteMapScreen implements Screen {
     }
 
     public void updateUiBar(){
-        //ui_bar.remove();
-        //ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+ flag, 1280,80);
-        //stage.addActor(ui_bar);
-        //ui_bar.setZIndex(3);
-        //extendViewport = new ExtendViewport(1280,720+flag);
-        //remainingLabel.setBounds(300,650+flag*2,180,60);
-        //hpLabel.setBounds(100,650+flag*2,180,60);
-        //return_button.setPosition(1205,(int) extendViewport.getMinWorldHeight()-65+ flag);
+        ui_bar.remove();
+        ui_bar.get_assets("Menus/Ui_Bar.png", 0, (int) extendViewport.getMinWorldHeight()-80+ flag, 1280,80);
+        stage.addActor(ui_bar);
+        ui_bar.setZIndex(3);
+        extendViewport = new ExtendViewport(1280,720+flag);
+        remainingLabel.setBounds(300,650+flag*2,180,60);
+        hpLabel.setBounds(100,650+flag*2,180,60);
+        return_button.setPosition(1205,(int) extendViewport.getMinWorldHeight()-65+ flag);
     }
     public void updateBG(){
         //bg.remove();;
@@ -283,9 +283,6 @@ public class RouteMapScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
-
-        updateUiBar();
 
         stage.draw();
         //stage.getBatch().disableBlending(); // only solution to stop ui disappear

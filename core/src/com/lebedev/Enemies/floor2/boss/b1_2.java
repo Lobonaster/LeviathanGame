@@ -64,7 +64,7 @@ public class b1_2 extends enemyTest {
                     case 1:
                         SoundMaker.makeSound("bash");
                         enemyTest.roll = 1;
-                        Verg.manage_HP(-26 - enemyTest.strength);
+                        Verg.manage_HP(-22 - enemyTest.strength);
                         enemyTest.attack_damage = 13;
                         moveType = 1;
                         break;
@@ -72,12 +72,12 @@ public class b1_2 extends enemyTest {
                         SoundMaker.makeSound("bash");
                         enemyTest.roll = 1;
                         Verg.manage_HP(-13 - enemyTest.strength);
-                        enemyTest.attack_damage = 26;
+                        enemyTest.attack_damage = 22;
                         strength += 4;
                         moveType = 1;
                         break;
                 }
-            }else { // one time phase 2 activation
+            } else { // one time phase 2 activation
                 pattern = 0;
                 patternLimit = 2;
                 moveType = 1;

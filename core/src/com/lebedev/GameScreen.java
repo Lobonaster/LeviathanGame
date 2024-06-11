@@ -203,6 +203,7 @@ public class GameScreen implements Screen {
             LeviathanGame.started = false;
             LeviathanGame.boss_battle = false;
             Verg.strength = 2;
+            enemyTest.phaseRoll = 2;
             routeMapScreen.dispose();
             BG_Music.startMusic("01_STS",true);
             dispose();
@@ -212,14 +213,16 @@ public class GameScreen implements Screen {
             if (LeviathanGame.boss_battle){
                 LeviathanGame.boss_battle = false;
                 LeviathanGame.current_level++;
-                if (LeviathanGame.current_level == 3){
+                if (LeviathanGame.current_level >= 2){
                     BG_Music.startMusic("01_STS",true);
-                    game.setScreen(new MainMenuScreen(game)); // Win, go back to menu
                     LeviathanGame.current_level = 1;
                     LeviathanGame.started = false;
                     routeMapScreen.dispose();
                     Verg.strength = 2;
                     LeviathanGame.global_deck.clear();
+                    DeckGenerator.defaultDeck();
+                    enemyTest.phaseRoll = 2;
+                    game.setScreen(new MainMenuScreen(game)); // Win, go back to menu
                     dispose();
                 }else {
                     BG_Music.startMusic("02_STS",true);

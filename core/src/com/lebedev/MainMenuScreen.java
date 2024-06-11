@@ -51,6 +51,7 @@ public class MainMenuScreen implements Screen {
         menuButtons.defaults().padLeft(90).spaceTop(20).width(450).height(100);
         TextButton text_button1 = new TextButton("PLAY",skin);
         if(LeviathanGame.started)text_button1.getLabel().setText("CONTINUE");
+        if(!LeviathanGame.started)text_button1.getLabel().setText("PLAY");
         menuButtons.add(text_button1).padTop(200);
         text_button1.getLabel().setAlignment(Align.left);
         text_button1.getLabelCell().padLeft(40);
@@ -90,6 +91,7 @@ public class MainMenuScreen implements Screen {
                     Verg.MAX_HP = 60;
                     Verg.MAX_ENERGY = 3;
                     LeviathanGame.started = true;
+                    DeckGenerator.defaultDeck();
                     game.setScreen(new RouteMapScreen(game));
                     dispose();
                 }
