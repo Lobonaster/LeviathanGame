@@ -170,6 +170,7 @@ public class enemyTest extends Actor{
                         rolls[roll].getKeyFrame(stateTime, true), enemy_x, enemy_y, ENEMY_WIDTH, ENEMY_HEIGHT);
             }
         } else {
+            roll = 2 ;
             phaseRoll = 2;
             strength = 0; // For reset
             dead = true;// For reset

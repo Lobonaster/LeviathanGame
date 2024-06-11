@@ -103,21 +103,21 @@ public class EventScreen implements Screen {
             case 1:
                 pic.get_assets("Buttons/girya.png", 55, 70, 460,460);
                 textLabel = new Label("Momentary opportunity",skin);
-                choice1.setText("Increase DrawCard and decrease 10 HP");
+                choice1.setText("Increase DrawCard and decrease 8 HP");
                 choice1.getLabel().setColor(Color.ORANGE);
-                choice2.setText("Increase MaxEnergy by 1 and decrease HP and MaxHp by 18");
+                choice2.setText("Increase MaxEnergy by 1 and decrease MaxHp by 18");
                 choice2.getLabel().setColor(Color.RED);
                 choice3.setText("Skip");
                 choice3.getLabel().setColor(Color.WHITE);
                 break;
             case 2:
                 pic.get_assets("Buttons/torture.png", 55, 70, 460,460);
-                textLabel = new Label("Slight relief",skin);
-                choice1.setText("Heal 10HP and get strong defence card");
+                textLabel = new Label("Torture",skin);
+                choice1.setText("Heal 12HP and get strong defence card");
                 choice1.getLabel().setColor(Color.GREEN);
                 choice2.setText("Get 1 strength and 7 DMG");
                 choice2.getLabel().setColor(Color.ORANGE);
-                choice3.setText("Get 14 MaxHP and curse");
+                choice3.setText("Get 14 MaxHP, 2 strength and curse");
                 choice3.getLabel().setColor(Color.DARK_GRAY);
                 break;
         }
@@ -190,8 +190,8 @@ public class EventScreen implements Screen {
                         Verg.manage_HP(-8);
                         break;
                     case 2:
-                        Verg.HP += 10;
-                        deckGenerator.addCard("defend");
+                        Verg.HP += 12;
+                        deckGenerator.addCard("defend+",1);
                         break;
                 }
                 routeMapScreen.updatePathProgress(pathIndex, buttonIndex);
@@ -206,12 +206,14 @@ public class EventScreen implements Screen {
 
                 switch (event_type){
                     case 0:
-                        deckGenerator.addCard("verticalSlash");
+                        deckGenerator.addCard("verticalSlash",1);
                         break;
                     case 1:
                         Verg.MAX_ENERGY++;
                         Verg.MAX_HP -= 18;
-                        Verg.heal_HP(-18);
+                        if (Verg.HP>Verg.MAX_HP){
+                            Verg.HP = Verg.MAX_HP;
+                        };
                         break;
                     case 2:
                         Verg.strength++;
@@ -242,7 +244,9 @@ public class EventScreen implements Screen {
                         break;
                     case 2:
                         Verg.MAX_HP += 14;
-                        deckGenerator.addCard("curse");
+                        Verg.heal_HP(14);
+                        Verg.strength += 2;
+                        deckGenerator.addCard("curse",1);
                         break;
                 }
 

@@ -96,11 +96,7 @@ public class Verg extends Actor {
         }
     }
     public static void heal_HP(int amount) { // When you need to heal trough shields
-        if (amount>0){
-            System.out.println("\n-------\nHEAL");
-        }else {
-            System.out.println("\n-------\nDMG");
-        }
+
         System.out.println("before: "+ HP+" / "+MAX_HP);
         HP += amount;
 
