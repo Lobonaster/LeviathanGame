@@ -190,7 +190,7 @@ public class EventScreen implements Screen {
                         Verg.manage_HP(-8);
                         break;
                     case 2:
-                        Verg.HP += 12;
+                        Verg.heal_HP(12);
                         deckGenerator.addCard("defend+",1);
                         break;
                 }

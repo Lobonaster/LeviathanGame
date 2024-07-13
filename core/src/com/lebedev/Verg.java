@@ -50,7 +50,7 @@ public class Verg extends Actor {
     public static int MAX_ENERGY = 3;
     public static int SHIELDS = 0;
     public static int Drawable_cards = 5;
-    public static int strength = 2;
+    public static int strength = 20;
 
 
     public Verg(){

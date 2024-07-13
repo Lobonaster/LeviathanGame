@@ -123,7 +123,7 @@ public class RouteMapScreen implements Screen {
                 if (j > 0) {
                     button.setDisabled(true);
                 }
-                changeColor(button);
+                changeColor(button,false);
                 pathTable.add(button).width(60).height(50).padTop(23).padRight(30).padLeft(30).row();
             }
 
@@ -144,7 +144,7 @@ public class RouteMapScreen implements Screen {
                     }
                 });
                 boss_button.setDisabled(true);
-                changeColor(boss_button);
+                changeColor(boss_button,false);
                 pathTable.add(boss_button).width(80).height(60).padTop(23).padRight(20).padLeft(20).row();
             }
             pathsTable.add(pathTable).top().padRight(30).padLeft(30).padBottom(400);
@@ -165,16 +165,16 @@ public class RouteMapScreen implements Screen {
         if (buttonIndex < pathCompletion[pathIndex].length - 1) {
             TextButton previousButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex);
             previousButton.setDisabled(true);
-            changeColor(previousButton);
+            changeColor(previousButton, true);
             TextButton nextButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex + 1);
             nextButton.setDisabled(false);
-            changeColor(nextButton);
+            changeColor(nextButton, false);
         } else {
             TextButton previousButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(13);
             previousButton.setDisabled(true);
-            changeColor(previousButton);
+            changeColor(previousButton, true);
             boss_button.setDisabled(false);
-            changeColor(boss_button);
+            changeColor(boss_button, false);
         }
     }
 
@@ -183,7 +183,7 @@ public class RouteMapScreen implements Screen {
             if (pathIndex != activePath) {
                 TextButton startButton = (TextButton) ((Table) pathsTable.getCells().get(pathIndex).getActor()).getChildren().get(buttonIndex);
                 startButton.setDisabled(true);
-                changeColor(startButton);
+                changeColor(startButton, true);
             }
         }
     }
@@ -248,10 +248,33 @@ public class RouteMapScreen implements Screen {
     private void makeEnemies(String enemy_type){
         EnemyMaker.enemyMaker(enemy_type);
     };
-    private void changeColor(TextButton button){
-        if (button.isDisabled()) {
-            button.getLabel().setColor(Color.GRAY);
-            button.setColor(Color.WHITE);
+    private void changeColor(TextButton button, Boolean completed){
+        String btn_name = button.getText().toString();
+        switch (btn_name) {
+            case "Enemy":
+                button.getLabel().setColor(Color.GRAY);
+                button.setColor(Color.WHITE);
+                break;
+            case "Elite":
+                button.getLabel().setColor(Color.ORANGE);
+                button.setColor(Color.WHITE);
+                break;
+            case "Event":
+                button.getLabel().setColor(Color.GREEN);
+                button.setColor(Color.WHITE);
+                break;
+            case "Boss":
+                button.getLabel().setColor(Color.RED);
+                button.setColor(Color.WHITE);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + btn_name);
+        }
+        if (button.isDisabled()){
+            if (completed){
+                button.getLabel().setColor(Color.LIGHT_GRAY);
+                button.setColor(Color.GRAY);
+            }
         }else {
             button.getLabel().setColor(Color.RED);
             button.setColor(Color.SLATE);
